@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>STEM Camp RC Car</title>
-    <style>
-        body { background-color: #ffffff; color: rgb(0, 0, 0); text-align: center; font-family: sans-serif; }
-        .stream-container { margin-top: 20px; }
-        img { border: 5px solid #60A5FA; width: 640px; height: 480px; }
-    </style>
+    <title>BYU STEM Camp RC Car - Live Stream</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>BYU STEM Camp RC Car</h1>
-    <div class="stream-container">
-        <img src="http://172.20.10.4:81/stream">
+    <div class="container">
+        <h1>BYU STEM Camp RC Car</h1>
+        <p class="subtitle">Live Video Stream</p>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="config-section">
+            <div class="config-group">
+                <label for="ipInput">ESP32 IP Address:</label>
+                <input type="text" id="ipInput" placeholder="192.168.1.100" value="172.20.10.4">
+            </div>
+            <div class="config-group">
+                <label for="portInput">Stream Port:</label>
+                <input type="number" id="portInput" placeholder="81" value="81" min="1" max="65535">
+            </div>
+            <button onclick="connectStream()">Connect Stream</button>
+            <button onclick="disconnectStream()" style="background: #ef4444;">Disconnect</button>
+            <div class="status">
+                <div class="status-indicator disconnected" id="statusIndicator"></div>
+                <span id="statusText">Disconnected</span>
+            </div>
+        </div>
+        
+        <div class="stream-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        
+        <p class="info-text">Configuration saved automatically - Auto-reconnects on disconnect</p>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
