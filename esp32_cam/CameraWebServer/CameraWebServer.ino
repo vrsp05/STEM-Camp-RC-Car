@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <index.h>
 
 // ===========================
 // Select camera model in board_config.h
@@ -10,8 +11,8 @@
 // ===========================
 // Enter your WiFi credentials
 // ===========================
-const char *ssid = "iPhone";
-const char *password = "vrsppalilo";
+const char *ssid = "BYU-RC-Car";
+const char *password = "byu-stem-camp-2026";
 
 void startCameraServer();
 void setupLedFlash();
@@ -107,21 +108,25 @@ void setup() {
   setupLedFlash();
 #endif
 
-  WiFi.begin(ssid, password);
-  WiFi.setSleep(false);
+  // WiFi.begin(ssid, password);
+  // WiFi.setSleep(false);
 
-  Serial.print("WiFi connecting");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
+  // Serial.print("WiFi connecting");
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   delay(500);
+  //   Serial.print(".");
+  // }
+
+
+  // And added the new Access Point (Host) code:
+  WiFi.softAP(ssid, password);
   Serial.println("");
-  Serial.println("WiFi connected");
+  Serial.println("Car Wi-Fi Network Started!");
 
   startCameraServer();
 
   Serial.print("Camera Ready! Use 'http://");
-  Serial.print(WiFi.localIP());
+  Serial.print(WiFi.softAPIP());
   Serial.println("' to connect");
 }
 
