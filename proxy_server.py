@@ -2,6 +2,7 @@
 """
 ESP32-CAM Proxy Server
 Serves a local web interface and proxies video streams from ESP32 cameras
+Supports multiple interface versions: web_interface (official) and test_interface (beta)
 """
 
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -10,10 +11,36 @@ import urllib.request
 import os
 import sys
 
-# Change to web_interface directory for serving static files
-os.chdir(os.path.join(os.path.dirname(__file__), 'web_interface'))
+# Get the directory containing this script
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class ProxyHandler(SimpleHTTPRequestHandler):
+    def translate_path(self, path):
+        """Override to serve files from the project root with web_interface as default"""
+        # Parse path
+        parsed_path = urlparse(path)
+        request_path = parsed_path.path
+        
+        # If root is requested, redirect to web_interface
+        if request_path == '/':
+            request_path = '/web_interface/index.html'
+        
+        # Convert URL path to filesystem path
+        if request_path.startswith('/test_interface/'):
+            # Serve from test_interface folder
+            filepath = os.path.join(script_dir, 'test_interface', request_path[len('/test_interface/'):])
+        elif request_path.startswith('/web_interface/'):
+            # Serve from web_interface folder
+            filepath = os.path.join(script_dir, 'web_interface', request_path[len('/web_interface/'):])
+        else:
+            # Default to web_interface for root and index
+            if request_path.endswith('/'):
+                filepath = os.path.join(script_dir, 'web_interface', 'index.html')
+            else:
+                filepath = os.path.join(script_dir, 'web_interface', request_path)
+        
+        return filepath
+
     def do_GET(self):
         """Handle GET requests - serve files or proxy stream"""
         
@@ -77,9 +104,14 @@ if __name__ == '__main__':
     httpd = HTTPServer(server_address, ProxyHandler)
     
     print(f"🎯 ESP32-CAM Proxy Server running on http://localhost:{port}")
-    print(f"📍 Default ESP32: http://localhost:{port}?ip=172.20.10.4&port=81")
-    print(f"🔗 Custom ESP32:  http://localhost:{port}?ip=192.168.1.100&port=81")
-    print("\nPress Ctrl+C to stop...")
+    print(f"\n📚 Available Versions:")
+    print(f"  Official:  http://localhost:{port}/web_interface/")
+    print(f"  Beta/Test: http://localhost:{port}/test_interface/")
+    print(f"\n🔗 With custom ESP32 IPs:")
+    print(f"  Official:  http://localhost:{port}/web_interface/?ip=192.168.1.100&port=81")
+    print(f"  Beta/Test: http://localhost:{port}/test_interface/?ip=192.168.1.100&port=81")
+    print(f"\n⚡ Default (opens official): http://localhost:{port}")
+    print(f"\nPress Ctrl+C to stop...")
     
     try:
         httpd.serve_forever()
