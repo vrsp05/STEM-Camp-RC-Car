@@ -4,64 +4,146 @@ const char INDEX_HTML[] PROGMEM = R"rawliteral(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BYU STEM Camp RC Car - Live Stream</title>
+    <title>BYU STEM Camp RC Car</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --byu-blue: #003478; --byu-light-blue: #0055B7; --white: #ffffff; --light-gray: #f5f5f5; --dark-gray: #333333; }
-        body { background-color: var(--byu-blue); color: var(--dark-gray); font-family: sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-        header { background-color: var(--white); padding: 15px 20px; border-bottom: 4px solid var(--byu-blue); text-align: center; }
-        .header-text h1 { font-size: 1.8em; color: var(--byu-blue); font-weight: 700; }
-        .header-text p { font-size: 0.9em; color: #666; margin-top: 2px; }
-        .container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 30px 20px; width: 100%; max-width: 800px; margin: 0 auto; }
-        .stream-section { background-color: var(--white); border-radius: 12px; padding: 25px; width: 100%; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-        .stream-title { font-size: 1.3em; color: var(--byu-blue); margin-bottom: 15px; font-weight: 600; text-align: center; }
-        .stream-container { background: #000; border: 3px solid var(--byu-blue); border-radius: 10px; overflow: hidden; display: flex; justify-content: center; align-items: center; aspect-ratio: 4/3; }
-        img#stream { max-width: 100%; max-height: 100%; display: block; }
-        .config-section { background-color: var(--light-gray); padding: 20px; border-radius: 10px; border-left: 4px solid var(--byu-blue); margin-top: 15px; display: flex; justify-content: center; gap: 15px; }
-        button { padding: 10px 20px; background-color: var(--byu-blue); color: var(--white); border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 1em; }
-        button:hover { background-color: var(--byu-light-blue); }
-        footer { background-color: var(--byu-blue); color: var(--white); text-align: center; padding: 20px; margin-top: auto; font-size: 0.9em; }
+        :root { --byu-blue: #003478; --white: #ffffff; --light-gray: #f5f5f5; }
+        body { background-color: var(--byu-blue); color: #333; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        .header { background: var(--white); width: 100%; padding: 15px; text-align: center; border-bottom: 4px solid #0055B7; margin-bottom: 10px;}
+        .header h1 { color: var(--byu-blue); font-size: 1.5em; }
+        
+        .container { background: var(--white); padding: 20px; border-radius: 12px; max-width: 600px; width: 95%; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        
+        .video-box { width: 100%; background: #000; border: 3px solid var(--byu-blue); border-radius: 8px; aspect-ratio: 4/3; overflow: hidden; margin-bottom: 20px;}
+        img#stream { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* The D-Pad Layout */
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 300px; margin: 0 auto 20px auto; }
+        .controls button { padding: 20px 0; font-size: 1.2em; font-weight: bold; background: var(--byu-blue); color: white; border: none; border-radius: 8px; cursor: pointer; user-select: none; -webkit-user-select: none;}
+        .controls button:active { background: #0055B7; transform: scale(0.95); }
+        
+        #btn-fwd { grid-column: 2; }
+        #btn-left { grid-column: 1; }
+        #btn-stop { grid-column: 2; background: #dc2626; }
+        #btn-right { grid-column: 3; }
+        #btn-rev { grid-column: 2; }
+
+        /* Sliders Layout */
+        .slider-group { background: var(--light-gray); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--byu-blue); }
+        .slider-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .slider-row:last-child { margin-bottom: 0; }
+        .slider-label { font-weight: bold; font-size: 0.9em; width: 100px; }
+        input[type="range"] { flex-grow: 1; margin: 0 10px; cursor: pointer; }
+        .slider-val { width: 30px; text-align: right; font-size: 0.9em; font-family: monospace; color: var(--byu-blue); font-weight: bold;}
+
+        .status { text-align: center; font-size: 0.9em; color: #666; font-weight: bold; margin-top: 10px;}
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-text">
-            <h1>RC Car Live Stream</h1>
-            <p>BYU STEM Camp 2026</p>
-        </div>
-    </header>
 
-    <div class="container">
-        <div class="stream-section">
-            <h2 class="stream-title">Live Video Feed</h2>
-            <div class="stream-container">
-                <img id="stream" src="" alt="Stream will appear here">
-            </div>
-            
-            <div class="config-section">
-                <button onclick="startStream()">Start Stream</button>
-                <button onclick="stopStream()" style="background-color: #dc2626;">Stop Stream</button>
-            </div>
-        </div>
+    <div class="header">
+        <h1>RC Car Live Stream</h1>
+        <p>BYU STEM Camp</p>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Brigham Young University STEM Camp</p>
-    </footer>
+    <div class="container">
+        <div class="video-box">
+            <img id="stream" src="" alt="Live Video">
+        </div>
+
+        <div class="controls">
+            <div></div>
+            <button id="btn-fwd">▲</button>
+            <div></div>
+            <button id="btn-left">◀</button>
+            <button id="btn-stop">■</button>
+            <button id="btn-right">▶</button>
+            <div></div>
+            <button id="btn-rev">▼</button>
+            <div></div>
+        </div>
+
+        <div class="slider-group">
+            <div class="slider-row">
+                <span class="slider-label">Headlights</span>
+                <input type="range" id="led-slider" min="0" max="255" value="0">
+                <span class="slider-val" id="led-val">0</span>
+            </div>
+            <div class="slider-row">
+                <span class="slider-label">Brightness</span>
+                <input type="range" id="bright-slider" min="-2" max="2" value="0">
+                <span class="slider-val" id="bright-val">0</span>
+            </div>
+            <div class="slider-row">
+                <span class="slider-label">Contrast</span>
+                <input type="range" id="contrast-slider" min="-2" max="2" value="0">
+                <span class="slider-val" id="contrast-val">0</span>
+            </div>
+        </div>
+        
+        <div class="status" id="ws-status">Connecting to Car...</div>
+    </div>
 
     <script>
-        function startStream() {
-            // This grabs the exact IP address the ESP32 is currently using
+        window.onload = function() {
             var streamUrl = window.location.protocol + '//' + window.location.hostname + ':81/stream';
             document.getElementById('stream').src = streamUrl;
+        };
+
+        var ws;
+        var statusText = document.getElementById('ws-status');
+
+        function connectWebSocket() {
+            ws = new WebSocket('ws://' + window.location.hostname + ':82/');
+            ws.onopen = function() {
+                statusText.innerText = "Car Connected & Ready!";
+                statusText.style.color = "green";
+            };
+            ws.onclose = function() {
+                statusText.innerText = "Connection Lost. Reconnecting...";
+                statusText.style.color = "red";
+                setTimeout(connectWebSocket, 2000);
+            };
+        }
+        connectWebSocket();
+
+        function sendCommand(cmd) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(cmd);
+            }
         }
 
-        function stopStream() {
-            document.getElementById('stream').src = "";
-        }
+        // D-Pad Listeners
+        const btns = ['fwd', 'rev', 'left', 'right'];
+        const actions = ['forward', 'backward', 'left', 'right'];
         
-        // Auto-start when page loads
-        window.onload = startStream;
+        btns.forEach((id, index) => {
+            let el = document.getElementById('btn-' + id);
+            let action = actions[index];
+            el.addEventListener('mousedown', () => sendCommand(action));
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand(action); });
+            el.addEventListener('mouseup', () => sendCommand('stop'));
+            el.addEventListener('touchend', (e) => { e.preventDefault(); sendCommand('stop'); });
+        });
+
+        let stopBtn = document.getElementById('btn-stop');
+        stopBtn.addEventListener('click', () => sendCommand('stop'));
+        stopBtn.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand('stop'); });
+
+        // Slider Listeners
+        function setupSlider(id, cmdPrefix) {
+            let slider = document.getElementById(id + '-slider');
+            let display = document.getElementById(id + '-val');
+            slider.addEventListener('input', function() {
+                display.innerText = this.value;
+                sendCommand(cmdPrefix + ':' + this.value);
+            });
+        }
+
+        setupSlider('led', 'led');
+        setupSlider('bright', 'bright');
+        setupSlider('contrast', 'contrast');
     </script>
 </body>
 </html>
