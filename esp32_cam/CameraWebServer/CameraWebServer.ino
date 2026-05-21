@@ -1,7 +1,11 @@
 #include <Arduino.h>
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <WebSocketsServer.h>
 #include <index.h>
+
+// Initiate WebSocketServer using Port #82
+WebSocketsServer webSocket = WebSocketsServer(82);
 
 // ===========================
 // Select camera model in board_config.h
@@ -16,6 +20,19 @@ const char *password = "byu-stem-camp-2026";
 
 void startCameraServer();
 void setupLedFlash();
+
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
+  // We only care about TEXT messages right now
+  if (type == WStype_TEXT) {
+    // Convert the raw data into a readable string
+    String command = String((char*)payload);
+    
+    Serial.print("Phone sent command: ");
+    Serial.println(command);
+    
+    // (We will add the actual motor controls here in the next step!)
+  }
+}
 
 void setup() {
   Serial.begin(115200);
@@ -124,6 +141,8 @@ void setup() {
   Serial.println("Car Wi-Fi Network Started!");
 
   startCameraServer();
+  webSocket.begin();
+  webSocket.onEvent(webSocketEvent);
 
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.softAPIP());
@@ -131,6 +150,6 @@ void setup() {
 }
 
 void loop() {
-  // Do nothing. Everything is done in another task by the web server
-  delay(10000);
+  webSocket.loop(); // Constantly check for new commands
+  delay(1);         // A tiny pause to keep the brain stable
 }
