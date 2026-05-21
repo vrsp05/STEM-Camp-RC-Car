@@ -22,15 +22,32 @@ void startCameraServer();
 void setupLedFlash();
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
-  // We only care about TEXT messages right now
   if (type == WStype_TEXT) {
-    // Convert the raw data into a readable string
     String command = String((char*)payload);
-    
     Serial.print("Phone sent command: ");
     Serial.println(command);
+
+    // Look for a colon in the message (e.g., "led:128")
+    int sepIndex = command.indexOf(':');
     
-    // (We will add the actual motor controls here in the next step!)
+    if (sepIndex > 0) {
+      // Split the text into the Name and the Number
+      String cmdName = command.substring(0, sepIndex);
+      int cmdValue = command.substring(sepIndex + 1).toInt();
+      
+      // Apply the settings to the physical hardware
+      if (cmdName == "led") {
+        ledcWrite(4, cmdValue); // Change Headlight brightness
+      } 
+      else if (cmdName == "bright") {
+        sensor_t * s = esp_camera_sensor_get();
+        s->set_brightness(s, cmdValue); // Change Camera Brightness
+      }
+      else if (cmdName == "contrast") {
+        sensor_t * s = esp_camera_sensor_get();
+        s->set_contrast(s, cmdValue); // Change Camera Contrast
+      }
+    }
   }
 }
 
@@ -141,6 +158,12 @@ void setup() {
   Serial.println("Car Wi-Fi Network Started!");
 
   startCameraServer();
+
+  // Initialize the Flash LED (Pin 4) for smooth brightness control (ESP32 Core v3.x)
+  ledcAttach(4, 1000, 8); // Attach Pin 4, 1000 Hz, 8-bit (0-255)
+  ledcWrite(4, 0);        // Start with the headlights OFF
+  
+  // Initialize the webSocket
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
 
