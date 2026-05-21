@@ -2,10 +2,13 @@
 #include "esp_camera.h"
 #include <WiFi.h>
 #include <WebSocketsServer.h>
+#include <Preferences.h>
 #include <index.h>
 
 // Initiate WebSocketServer using Port #82
 WebSocketsServer webSocket = WebSocketsServer(82);
+
+Preferences preferences;
 
 // ===========================
 // Select camera model in board_config.h
@@ -15,8 +18,71 @@ WebSocketsServer webSocket = WebSocketsServer(82);
 // ===========================
 // Enter your WiFi credentials
 // ===========================
-const char *ssid = "BYU-RC-Car";
-const char *password = "byu-stem-camp-2026";
+// const char *ssid = "BYU-RC-Car";
+// const char *password = "byu-stem-camp-2026";
+
+// ===========================
+// Dynamic WiFi Credentials
+// ===========================
+String carSSID;
+String carPassword;
+
+// ===========================
+// Motor Driver Blueprint
+// ===========================
+struct MOTOR_PINS {
+  int pinIN1;
+  int pinIN2;
+};
+
+// Placeholder pins - the hardware team will update these later!
+MOTOR_PINS rightMotor = {12, 13}; 
+MOTOR_PINS leftMotor  = {14, 15};
+
+// ===========================
+// Movement Functions
+// ===========================
+void stopCar() {
+  digitalWrite(rightMotor.pinIN1, LOW);
+  digitalWrite(rightMotor.pinIN2, LOW);
+  digitalWrite(leftMotor.pinIN1, LOW);
+  digitalWrite(leftMotor.pinIN2, LOW);
+  Serial.println("Car: STOP");
+}
+
+void driveForward() {
+  digitalWrite(rightMotor.pinIN1, HIGH);
+  digitalWrite(rightMotor.pinIN2, LOW);
+  digitalWrite(leftMotor.pinIN1, HIGH);
+  digitalWrite(leftMotor.pinIN2, LOW);
+  Serial.println("Car: FORWARD");
+}
+
+void driveBackward() {
+  digitalWrite(rightMotor.pinIN1, LOW);
+  digitalWrite(rightMotor.pinIN2, HIGH);
+  digitalWrite(leftMotor.pinIN1, LOW);
+  digitalWrite(leftMotor.pinIN2, HIGH);
+  Serial.println("Car: BACKWARD");
+}
+
+void turnRight() {
+  // Right motor spins backward, left motor spins forward
+  digitalWrite(rightMotor.pinIN1, LOW);
+  digitalWrite(rightMotor.pinIN2, HIGH);
+  digitalWrite(leftMotor.pinIN1, HIGH);
+  digitalWrite(leftMotor.pinIN2, LOW);
+  Serial.println("Car: RIGHT");
+}
+
+void turnLeft() {
+  // Right motor spins forward, left motor spins backward
+  digitalWrite(rightMotor.pinIN1, HIGH);
+  digitalWrite(rightMotor.pinIN2, LOW);
+  digitalWrite(leftMotor.pinIN1, LOW);
+  digitalWrite(leftMotor.pinIN2, HIGH);
+  Serial.println("Car: LEFT");
+}
 
 void startCameraServer();
 void setupLedFlash();
@@ -29,11 +95,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
 
     // Look for a colon in the message (e.g., "led:128")
     int sepIndex = command.indexOf(':');
+
+    String cmdData = command.substring(sepIndex + 1);
     
     if (sepIndex > 0) {
       // Split the text into the Name and the Number
       String cmdName = command.substring(0, sepIndex);
-      int cmdValue = command.substring(sepIndex + 1).toInt();
+      int cmdValue = cmdData.toInt();
       
       // Apply the settings to the physical hardware
       if (cmdName == "led") {
@@ -47,6 +115,43 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
         sensor_t * s = esp_camera_sensor_get();
         s->set_contrast(s, cmdValue); // Change Camera Contrast
       }
+
+      // --- NEW: Motor Logic ---
+      else if (cmdName == "forward") {
+        driveForward();
+      }
+      else if (cmdName == "backward") {
+        driveBackward();
+      }
+      else if (cmdName == "left") {
+        turnLeft();
+      }
+      else if (cmdName == "right") {
+        turnRight();
+      }
+      else if (cmdName == "stop") {
+        stopCar();
+      }
+
+      else if (cmdName == "config") {
+
+        // Find the comma separating the Name and Password
+        int commaIndex = cmdData.indexOf(',');
+        
+        if (commaIndex > 0) {
+          String newSSID = cmdData.substring(0, commaIndex);
+          String newPass = cmdData.substring(commaIndex + 1);
+
+          // Lock the new credentials into the permanent vault
+          preferences.putString("ssid", newSSID);
+          preferences.putString("pass", newPass);
+
+          Serial.println("Vault updated! Rebooting car to apply changes...");
+          delay(1000);
+          ESP.restart(); // Physically reboot the ESP32
+        }
+      }
+
     }
   }
 }
@@ -55,6 +160,15 @@ void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println();
+
+  // Initialize motor pins as power outputs
+  pinMode(rightMotor.pinIN1, OUTPUT);
+  pinMode(rightMotor.pinIN2, OUTPUT);
+  pinMode(leftMotor.pinIN1, OUTPUT);
+  pinMode(leftMotor.pinIN2, OUTPUT);
+  
+  // Ensure the car starts in a parked state
+  stopCar();
 
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -153,7 +267,17 @@ void setup() {
 
 
   // And added the new Access Point (Host) code:
-  WiFi.softAP(ssid, password);
+  // WiFi.softAP(ssid, password);
+
+  // --- Open the permanent memory vault ---
+  preferences.begin("car-settings", false);
+  
+  // Try to load saved credentials. If empty, use defaults.
+  carSSID = preferences.getString("ssid", "BYU-RC-Car");
+  carPassword = preferences.getString("pass", "camp2026");
+  
+  // Start the Access Point using the loaded credentials
+  WiFi.softAP(carSSID.c_str(), carPassword.c_str());
   Serial.println("");
   Serial.println("Car Wi-Fi Network Started!");
 
