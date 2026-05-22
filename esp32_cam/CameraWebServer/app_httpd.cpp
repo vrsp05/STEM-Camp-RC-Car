@@ -25,6 +25,8 @@
 #include "index.h"
 #include "setup.h"
 
+extern bool isConfigured;
+
 #if defined(ARDUINO_ARCH_ESP32) && defined(CONFIG_ARDUHAL_ESP_LOG)
 #include "esp32-hal-log.h"
 #endif
@@ -657,8 +659,16 @@ static esp_err_t win_handler(httpd_req_t *req) {
 }
 
 static esp_err_t index_handler(httpd_req_t *req){
+    // Traffic Cop Logic: Is the car factory-fresh?
+    if (!isConfigured) {
+        // Force the browser to redirect to the /setup page
+        httpd_resp_set_status(req, "302 Found");
+        httpd_resp_set_hdr(req, "Location", "/setup");
+        return httpd_resp_send(req, NULL, 0);
+    }
+
+    // If the car IS configured, serve the normal driving dashboard
     httpd_resp_set_type(req, "text/html");
-    // We tell the server to send your custom INDEX_HTML string
     return httpd_resp_send(req, INDEX_HTML, HTTPD_RESP_USE_STRLEN);
 }
 

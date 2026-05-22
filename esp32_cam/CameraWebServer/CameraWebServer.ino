@@ -26,6 +26,7 @@ Preferences preferences;
 // ===========================
 String carSSID;
 String carPassword;
+bool isConfigured = false; // The Traffic Cop's flag
 
 // ===========================
 // Motor Driver Blueprint
@@ -270,16 +271,26 @@ void setup() {
   // WiFi.softAP(ssid, password);
 
   // --- Open the permanent memory vault ---
-  preferences.begin("car-settings", false);
-  
-  // Try to load saved credentials. If empty, use defaults.
-  carSSID = preferences.getString("ssid", "BYU-RC-Car");
-  carPassword = preferences.getString("pass", "camp2026");
-  
-  // Start the Access Point using the loaded credentials
-  WiFi.softAP(carSSID.c_str(), carPassword.c_str());
-  Serial.println("");
-  Serial.println("Car Wi-Fi Network Started!");
+    preferences.begin("car-settings", false);
+    
+    // Try to load saved credentials.
+    carSSID = preferences.getString("ssid", "");
+    
+    if (carSSID == "") {
+      // The vault is empty! This is a factory-fresh car.
+      isConfigured = false;
+      carSSID = "BYU-RC-Car";
+      carPassword = "camp2026";
+    } else {
+      // The vault has data! A student has configured this car.
+      isConfigured = true;
+      carPassword = preferences.getString("pass", "");
+    }
+    
+    // Start the Access Point using the loaded credentials
+    WiFi.softAP(carSSID.c_str(), carPassword.c_str());
+    Serial.println("");
+    Serial.println("Car Wi-Fi Network Started!");
 
   startCameraServer();
 
