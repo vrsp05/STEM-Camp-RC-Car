@@ -16,7 +16,7 @@ WebSocketsServer webSocket = WebSocketsServer(82);
 // Hardcoded Factory Credentials
 // Change this number for each car before flashing! (e.g., BYU-Car-2, BYU-Car-3)
 // ===========================
-const char *carSSID = "Nora-Car";
+const char *carSSID = "SixSeven";
 
 // ===========================
 // Motor Driver Blueprint
@@ -159,32 +159,27 @@ void setup() {
   config.pin_sccb_scl = SIOC_GPIO_NUM;
   config.pin_pwdn = PWDN_GPIO_NUM;
   config.pin_reset = RESET_GPIO_NUM;
-  config.xclk_freq_hz = 20000000;
-  config.frame_size = FRAMESIZE_UXGA;
-  config.pixel_format = PIXFORMAT_JPEG;  // for streaming
-  config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
+  
+  // --- STABILITY TUNE ---
+  // 1. Clock Speed: Dropped from 20MHz to 10MHz to prevent hardware crashing
+  config.xclk_freq_hz = 10000000; 
+  
+  // 2. Resolution: Boot natively at 320x240 for zero latency
+  config.frame_size = FRAMESIZE_QVGA; 
+  
+  config.pixel_format = PIXFORMAT_JPEG;
+  config.grab_mode = CAMERA_GRAB_LATEST;
   config.fb_location = CAMERA_FB_IN_PSRAM;
-  config.jpeg_quality = 12;
-  config.fb_count = 1;
+  
+  // 3. JPEG Quality: Higher number = smaller file size = faster stream
+  config.jpeg_quality = 15; 
+  config.fb_count = 2;
 
-  // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
-  // for larger pre-allocated frame buffer.
-  if (config.pixel_format == PIXFORMAT_JPEG) {
-    if (psramFound()) {
-      config.jpeg_quality = 10;
-      config.fb_count = 2;
-      config.grab_mode = CAMERA_GRAB_LATEST;
-    } else {
-      // Limit the frame size when PSRAM is not available
-      config.frame_size = FRAMESIZE_SVGA;
-      config.fb_location = CAMERA_FB_IN_DRAM;
-    }
-  } else {
-    // Best option for face detection/recognition
-    config.frame_size = FRAMESIZE_240X240;
-#if CONFIG_IDF_TARGET_ESP32S3
-    config.fb_count = 2;
-#endif
+  // Fallback if the chip has bad memory
+  if (!psramFound()) {
+    config.frame_size = FRAMESIZE_QVGA;
+    config.fb_location = CAMERA_FB_IN_DRAM;
+    config.fb_count = 1;
   }
 
 #if defined(CAMERA_MODEL_ESP_EYE)
@@ -206,10 +201,13 @@ void setup() {
     s->set_brightness(s, 1);   // up the brightness just a bit
     s->set_saturation(s, -2);  // lower the saturation
   }
-  // drop down frame size for higher initial frame rate
-  if (config.pixel_format == PIXFORMAT_JPEG) {
-    s->set_framesize(s, FRAMESIZE_QVGA);
-  }
+
+  // --- THE AUTO-PILOT TUNE ---
+  s->set_exposure_ctrl(s, 1); // Auto-Exposure ON (adapts to shadows/sunlight)
+  s->set_aec2(s, 1);          // Advanced Auto-Exposure DSP ON
+  s->set_whitebal(s, 1);      // Auto-White Balance ON (removes weird color tints)
+  s->set_awb_gain(s, 1);      // Auto-White Balance Gain ON
+  s->set_wb_mode(s, 0);       // Set White Balance Mode to standard Auto
 
 #if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
   s->set_vflip(s, 1);
