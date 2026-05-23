@@ -2,13 +2,10 @@
 #include "esp_camera.h"
 #include <WiFi.h>
 #include <WebSocketsServer.h>
-#include <Preferences.h>
 #include <index.h>
 
 // Initiate WebSocketServer using Port #82
 WebSocketsServer webSocket = WebSocketsServer(82);
-
-Preferences preferences;
 
 // ===========================
 // Select camera model in board_config.h
@@ -16,17 +13,10 @@ Preferences preferences;
 #include "board_config.h"
 
 // ===========================
-// Enter your WiFi credentials
+// Hardcoded Factory Credentials
+// Change this number for each car before flashing! (e.g., BYU-Car-2, BYU-Car-3)
 // ===========================
-// const char *ssid = "BYU-RC-Car";
-// const char *password = "byu-stem-camp-2026";
-
-// ===========================
-// Dynamic WiFi Credentials
-// ===========================
-String carSSID;
-String carPassword;
-bool isConfigured = false; // The Traffic Cop's flag
+const char *carSSID = "Nora-Car";
 
 // ===========================
 // Motor Driver Blueprint
@@ -96,7 +86,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
 
     // Look for a colon in the message (e.g., "led:128")
     int sepIndex = command.indexOf(':');
-
     String cmdData = command.substring(sepIndex + 1);
     
     if (sepIndex > 0) {
@@ -117,7 +106,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
         s->set_contrast(s, cmdValue); // Change Camera Contrast
       }
 
-      // --- NEW: Motor Logic ---
+      // --- Motor Logic ---
       else if (cmdName == "forward") {
         driveForward();
       }
@@ -133,26 +122,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
       else if (cmdName == "stop") {
         stopCar();
       }
-
-      else if (cmdName == "config") {
-
-        // Find the comma separating the Name and Password
-        int commaIndex = cmdData.indexOf(',');
-        
-        if (commaIndex > 0) {
-          String newSSID = cmdData.substring(0, commaIndex);
-          String newPass = cmdData.substring(commaIndex + 1);
-
-          // Lock the new credentials into the permanent vault
-          preferences.putString("ssid", newSSID);
-          preferences.putString("pass", newPass);
-
-          Serial.println("Vault updated! Rebooting car to apply changes...");
-          delay(1000);
-          ESP.restart(); // Physically reboot the ESP32
-        }
-      }
-
     }
   }
 }
@@ -193,14 +162,13 @@ void setup() {
   config.xclk_freq_hz = 20000000;
   config.frame_size = FRAMESIZE_UXGA;
   config.pixel_format = PIXFORMAT_JPEG;  // for streaming
-  //config.pixel_format = PIXFORMAT_RGB565; // for face detection/recognition
   config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
   config.fb_location = CAMERA_FB_IN_PSRAM;
   config.jpeg_quality = 12;
   config.fb_count = 1;
 
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
-  //                      for larger pre-allocated frame buffer.
+  // for larger pre-allocated frame buffer.
   if (config.pixel_format == PIXFORMAT_JPEG) {
     if (psramFound()) {
       config.jpeg_quality = 10;
@@ -257,40 +225,10 @@ void setup() {
   setupLedFlash();
 #endif
 
-  // WiFi.begin(ssid, password);
-  // WiFi.setSleep(false);
-
-  // Serial.print("WiFi connecting");
-  // while (WiFi.status() != WL_CONNECTED) {
-  //   delay(500);
-  //   Serial.print(".");
-  // }
-
-
-  // And added the new Access Point (Host) code:
-  // WiFi.softAP(ssid, password);
-
-  // --- Open the permanent memory vault ---
-    preferences.begin("car-settings", false);
-    
-    // Try to load saved credentials.
-    carSSID = preferences.getString("ssid", "");
-    
-    if (carSSID == "") {
-      // The vault is empty! This is a factory-fresh car.
-      isConfigured = false;
-      carSSID = "BYU-RC-Car";
-      carPassword = "camp2026";
-    } else {
-      // The vault has data! A student has configured this car.
-      isConfigured = true;
-      carPassword = preferences.getString("pass", "");
-    }
-    
-    // Start the Access Point using the loaded credentials
-    WiFi.softAP(carSSID.c_str(), carPassword.c_str());
-    Serial.println("");
-    Serial.println("Car Wi-Fi Network Started!");
+  // --- Open Access Point (No Password) ---
+  WiFi.softAP(carSSID, NULL); // Using NULL creates an open network
+  Serial.println("");
+  Serial.println("Car Wi-Fi Network Started!");
 
   startCameraServer();
 
