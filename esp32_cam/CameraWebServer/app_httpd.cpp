@@ -23,7 +23,6 @@
 #include "camera_index.h"
 #include "board_config.h"
 #include "index.h"
-#include "setup.h"
 
 #if defined(ARDUINO_ARCH_ESP32) && defined(CONFIG_ARDUHAL_ESP_LOG)
 #include "esp32-hal-log.h"
@@ -658,32 +657,10 @@ static esp_err_t win_handler(httpd_req_t *req) {
 
 static esp_err_t index_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "text/html");
-    // We tell the server to send your custom INDEX_HTML string
     return httpd_resp_send(req, INDEX_HTML, HTTPD_RESP_USE_STRLEN);
 }
 
-static esp_err_t setup_handler(httpd_req_t *req){
-    httpd_resp_set_type(req, "text/html");
-    return httpd_resp_send(req, SETUP_HTML, HTTPD_RESP_USE_STRLEN);
-}
 
-// static esp_err_t index_handler(httpd_req_t *req) {
-//   httpd_resp_set_type(req, "text/html");
-//   httpd_resp_set_hdr(req, "Content-Encoding", "gzip");
-//   sensor_t *s = esp_camera_sensor_get();
-//   if (s != NULL) {
-//     if (s->id.PID == OV3660_PID) {
-//       return httpd_resp_send(req, (const char *)index_ov3660_html_gz, index_ov3660_html_gz_len);
-//     } else if (s->id.PID == OV5640_PID) {
-//       return httpd_resp_send(req, (const char *)index_ov5640_html_gz, index_ov5640_html_gz_len);
-//     } else {
-//       return httpd_resp_send(req, (const char *)index_ov2640_html_gz, index_ov2640_html_gz_len);
-//     }
-//   } else {
-//     log_e("Camera sensor not found");
-//     return httpd_resp_send_500(req);
-//   }
-// }
 
 void startCameraServer() {
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
@@ -700,13 +677,6 @@ void startCameraServer() {
     .handle_ws_control_frames = false,
     .supported_subprotocol = NULL
 #endif
-  };
-
-  httpd_uri_t setup_uri = {
-    .uri       = "/setup",
-    .method    = HTTP_GET,
-    .handler   = setup_handler,
-    .user_ctx  = NULL
   };
 
   httpd_uri_t status_uri = {
@@ -844,7 +814,6 @@ void startCameraServer() {
   log_i("Starting web server on port: '%u'", config.server_port);
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
     httpd_register_uri_handler(camera_httpd, &index_uri);
-    httpd_register_uri_handler(camera_httpd, &setup_uri);
     httpd_register_uri_handler(camera_httpd, &cmd_uri);
     httpd_register_uri_handler(camera_httpd, &status_uri);
     httpd_register_uri_handler(camera_httpd, &capture_uri);
