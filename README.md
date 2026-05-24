@@ -11,7 +11,7 @@ A robust, low-cost, and zero-latency RC car software framework designed for educ
 
 ## Hardware Requirements
 
-- **Microcontroller:** ESP32-CAM (OV2640 or OV3660 sensor)
+- **Microcontroller:** ESP32-CAM with OV2640 sensor (recommended). OV3660 is compatible but may not perform as well.
 - **Motor Driver:** To be decided
 - **Chassis:** To be decided
 - **Power Supply:** To be decided
@@ -35,25 +35,56 @@ The following is a reference wiring diagram for typical motor driver configurati
 
 ## Setup & Installation
 
-### 1. Configure the Car's Name
+### 1. Fork and Clone the Repository
 
-Open `CameraWebServer.ino` in the Arduino IDE. Locate this line near the top and change it to the physical car's designated name (e.g., `BYU-Car-2`):
+1. **Fork the repository** by clicking the "Fork" button on GitHub (top-right corner).
+   - This creates your own copy of the project, so you won't accidentally modify the original repository.
+
+2. **Clone your forked repository** to your local machine:
+
+```bash
+git clone https://github.com/vrsp05/STEM-Camp-RC-Car.git
+cd STEM-Camp-RC-Car
+```
+
+### 2. Set Up Arduino IDE
+
+Configure your Arduino IDE to support the ESP32-CAM board and install the necessary libraries. Follow the detailed guide:
+
+**[Complete Arduino IDE Setup Guide →](ARDUINO_IDE_ESP32_SETUP.md)**
+
+This includes:
+- Installing the latest ESP32 libraries by Espressif via Boards Manager
+- Selecting the correct board (AI Thinker ESP32-CAM)
+- Selecting the correct COM port
+- Troubleshooting common issues
+
+### 3. Connect Your ESP32-CAM to Your Computer
+
+1. Connect your ESP32-CAM to your computer using the USB cable connected to the MB board or an FTDI programmer.
+2. Open the Arduino IDE and ensure the correct COM port is selected (**Tools → Port**).
+
+### 4. Configure the Car's Name
+
+1. In the Arduino IDE, open the `CameraWebServer.ino` file from the `esp32_cam/CameraWebServer/` directory.
+2. Locate this line near the top of the file and change it to your car's designated name (e.g., `BYU-Car-2`):
 
 ```cpp
 const char *carSSID = "BYU-Car-1";
 ```
 
-### 2. Flash the Firmware
+### 5. Flash the Firmware
 
-1. Connect your ESP32-CAM to your computer using the MB board or an FTDI programmer.
-2. Select AI Thinker ESP32-CAM in the Arduino Board Manager.
-3. Click Upload.
+1. In the Arduino IDE, click **Sketch → Upload** (or press `Ctrl+U` / `Cmd+U`).
+2. Wait for the upload to complete. You should see "Done uploading" in the console.
+3. Once complete, the MB board is no longer needed (you can disconnect it).
 
-### 3. Drive!
+### 6. Drive!
 
 1. Power on the car.
 2. Open your smartphone or laptop Wi-Fi settings and connect to the car's open network (e.g., `BYU-Car-1`).
 3. Open a web browser and navigate to: `http://192.168.4.1/`
+4. Use the web dashboard to control the car and adjust camera settings.
 
 ## Architecture
 
@@ -67,6 +98,12 @@ This project builds upon excellent educational resources from the community:
 - [Simple Circuits Tutorial](https://www.youtube.com/watch?v=Du1UvHnD-ZM) by Simple Circuits
 - [ESP32-CAM Car Robot Web Server](https://randomnerdtutorials.com/esp32-cam-car-robot-web-server/) by Random Nerd Tutorials
 - [RoboArmy Project](https://youtu.be/YqQc_Sm9vlA) by RoboArmy
+
+## About This Project
+
+This is a demonstration project built by Victor Rafael Santana for the BYU STEM Camp (2026). It showcases how embedded systems and IoT technology can be integrated into a fun, interactive workshop experience. The goal is to provide students with hands-on experience building and controlling robot cars, while learning about microcontrollers, wireless networking, web servers, and real-time systems.
+
+This project is proposed as a potential new workshop offering for the BYU STEM Camp to enhance the educational experience and inspire students interested in robotics and embedded systems.
 
 ---
 
