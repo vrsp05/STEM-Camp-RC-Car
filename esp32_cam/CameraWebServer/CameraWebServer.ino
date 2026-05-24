@@ -16,7 +16,7 @@ WebSocketsServer webSocket = WebSocketsServer(82);
 // Hardcoded Factory Credentials
 // Change this number for each car before flashing! (e.g., BYU-Car-2, BYU-Car-3)
 // ===========================
-const char *carSSID = "SixSeven";
+const char *carSSID = "BrainRot";
 
 // ===========================
 // Motor Driver Blueprint
@@ -195,11 +195,25 @@ void setup() {
   }
 
   sensor_t *s = esp_camera_sensor_get();
-  // initial sensors are flipped vertically and colors are a bit saturated
-  if (s->id.PID == OV3660_PID) {
-    s->set_vflip(s, 1);        // flip it back
-    s->set_brightness(s, 1);   // up the brightness just a bit
-    s->set_saturation(s, -2);  // lower the saturation
+  
+if (s->id.PID == OV3660_PID) {
+    s->set_vflip(s, 1);        
+    
+    // 1. Brightness & Saturation
+    s->set_brightness(s, 0);   // Reset to 0. It is already overexposing, don't force it higher!
+    s->set_saturation(s, -2);  // Keep this low to suppress the red bleed
+    
+    // 2. White Balance
+    s->set_whitebal(s, 1);     // Auto White Balance ON
+    s->set_awb_gain(s, 1);     // AWB Gain ON
+    s->set_wb_mode(s, 0);      // Set back to Auto for now to let the DSP work
+
+    // 3. THE DEEP CALIBRATION (The Missing Pieces)
+    s->set_lenc(s, 1);         // Lens Correction ON (Fixes pink color fringing)
+    s->set_raw_gma(s, 1);      // Raw Gamma ON (Fixes the blown-out, overly bright exposure)
+    s->set_dcw(s, 1);          // Downsize Center Weight ON (Helps the camera meter light correctly)
+    s->set_bpc(s, 1);          // Black Pixel Correction ON
+    s->set_wpc(s, 1);          // White Pixel Correction ON
   }
 
   // --- THE AUTO-PILOT TUNE ---
