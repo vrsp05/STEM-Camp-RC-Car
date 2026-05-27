@@ -67,7 +67,7 @@ const char INDEX_HTML[] PROGMEM = R"rawliteral(
         <div class="slider-group">
             <div class="slider-row">
                 <span class="slider-label">Headlights</span>
-                <input type="range" id="led-slider" min="0" max="255" value="0">
+                <input type="range" id="led-slider" min="0" max="40" value="0">
                 <span class="slider-val" id="led-val">0</span>
             </div>
             <div class="slider-row">
