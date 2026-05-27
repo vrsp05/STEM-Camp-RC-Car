@@ -16,7 +16,7 @@ WebSocketsServer webSocket = WebSocketsServer(82);
 // Hardcoded Factory Credentials
 // Change this number for each car before flashing! (e.g., BYU-Car-2, BYU-Car-3)
 // ===========================
-const char *carSSID = "BrainRot";
+const char *carSSID = "SixSeven";
 
 // ===========================
 // Motor Driver Blueprint
@@ -95,8 +95,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
       
       // Apply the settings to the physical hardware
       if (cmdName == "led") {
-        ledcWrite(4, cmdValue); // Change Headlight brightness
-      } 
+        // Hardware Safety: Cap the physical brightness to 50 (out of 255) to prevent burning
+        int safeValue = map(cmdValue, 0, 255, 0, 50); 
+        ledcWrite(4, safeValue); 
+      }
       else if (cmdName == "bright") {
         sensor_t * s = esp_camera_sensor_get();
         s->set_brightness(s, cmdValue); // Change Camera Brightness
@@ -164,15 +166,15 @@ void setup() {
   // 1. Clock Speed: Dropped from 20MHz to 10MHz to prevent hardware crashing
   config.xclk_freq_hz = 10000000; 
   
-  // 2. Resolution: Boot natively at 320x240 for zero latency
-  config.frame_size = FRAMESIZE_QVGA; 
+  // 2. Resolution: Bumped to CIF (400x296) for better quality without lagging the D-Pad
+  config.frame_size = FRAMESIZE_CIF; 
   
   config.pixel_format = PIXFORMAT_JPEG;
   config.grab_mode = CAMERA_GRAB_LATEST;
   config.fb_location = CAMERA_FB_IN_PSRAM;
   
-  // 3. JPEG Quality: Higher number = smaller file size = faster stream
-  config.jpeg_quality = 15; 
+  // 3. JPEG Quality: Lowered to 12 for a sharper image (lower number = less compression)
+  config.jpeg_quality = 12; 
   config.fb_count = 2;
 
   // Fallback if the chip has bad memory
@@ -241,6 +243,15 @@ if (s->id.PID == OV3660_PID) {
   WiFi.softAP(carSSID, NULL); // Using NULL creates an open network
   Serial.println("");
   Serial.println("Car Wi-Fi Network Started!");
+
+  // --- BOOT FLASH ---
+  // Blink the LED 3 times quickly at a safe brightness to signal the car is ready
+  for(int i = 0; i < 3; i++) {
+    ledcWrite(4, 50); 
+    delay(150);
+    ledcWrite(4, 0);   
+    delay(150);
+  }
 
   startCameraServer();
 
