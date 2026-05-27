@@ -95,8 +95,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
       
       // Apply the settings to the physical hardware
       if (cmdName == "led") {
-        // Hardware Safety: Cap the physical brightness to 50 (out of 255) to prevent burning
-        int safeValue = map(cmdValue, 0, 255, 0, 50); 
+        // Hardware Safety: Cap the physical brightness to 40 (out of 255) to prevent burning
+        int safeValue = map(cmdValue, 0, 255, 0, 40); 
         ledcWrite(4, safeValue); 
       }
       else if (cmdName == "bright") {
@@ -247,7 +247,7 @@ if (s->id.PID == OV3660_PID) {
   // --- BOOT FLASH ---
   // Blink the LED 3 times quickly at a safe brightness to signal the car is ready
   for(int i = 0; i < 3; i++) {
-    ledcWrite(4, 50); 
+    ledcWrite(4, 25); 
     delay(150);
     ledcWrite(4, 0);   
     delay(150);
