@@ -1,10 +1,10 @@
 # BYU STEM Camp RC Car (ESP32-CAM)
 
-A robust, low-cost, and zero-latency RC car software framework designed for educational STEM camps. This project turns a standard ESP32-CAM into a standalone web server, video streamer, and motor controller, all without requiring an external internet connection.
+A robust, low-cost, and low-latency RC car software framework designed for educational STEM camps. This project turns a standard ESP32-CAM into a standalone web server, video streamer, and motor controller, all without requiring an external internet connection.
 
 ## Features
 
-- **Zero-Latency Video:** Optimized firmware utilizing native QVGA resolution and an adjusted 10MHz clock speed for rock-solid MJPEG streaming over a local network.
+- **Low-Latency Video:** Optimized firmware utilizing CIF (400x296) resolution and an adjusted 10MHz clock speed for rock-solid MJPEG streaming over a local network.
 - **WebSocket Nervous System:** Sub-millisecond response times for driving controls and camera tuning.
 - **Frictionless Connectivity:** Auto-broadcasting, password-free Wi-Fi Access Points (e.g., `BYU-Car-1`). Students connect and drive instantly.
 - **On-the-Fly Tuning:** A sleek, mobile-friendly web dashboard featuring a D-Pad and live sliders to control Headlight brightness, Camera Contrast, and Exposure.
@@ -12,9 +12,12 @@ A robust, low-cost, and zero-latency RC car software framework designed for educ
 ## Hardware Requirements
 
 - **Microcontroller:** ESP32-CAM with OV2640 sensor (recommended). OV3660 is compatible but may not perform as well.
+- **Motors:** Four TT DC gearbox motors with retractable design for easy suitcase storage
 - **Motor Driver:** To be decided
 - **Chassis:** To be decided
-- **Power Supply:** To be decided
+- **Power Supply:** 3 AAA battery pack
+- **Power Switch:** SLW-1276864-4A-D switch for car control
+- **Indicator:** Onboard LED with brightness settings (0 = off, 40 = highest brightness)
 
 *Note: Do not power the motors directly from the ESP32!*
 
@@ -24,14 +27,14 @@ The following is a reference wiring diagram for typical motor driver configurati
 
 | ESP32-CAM Pin | Motor Driver Pin | Function |
 | :--- | :--- | :--- |
-| `GPIO 12` | `IN1` | Right Motor Forward |
-| `GPIO 13` | `IN2` | Right Motor Reverse |
-| `GPIO 14` | `IN3` | Left Motor Forward |
-| `GPIO 15` | `IN4` | Left Motor Reverse |
+| `GPIO 12` | Motor 1 Control | Motor 1 |
+| `GPIO 13` | Motor 2 Control | Motor 2 |
+| `GPIO 14` | Motor 3 Control | Motor 3 |
+| `GPIO 15` | Motor 4 Control | Motor 4 |
 | `5V` | `5V Out` | Power to ESP32 |
 | `GND` | `GND` | Common Ground |
 
-*Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins.*
+*Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins. GPIO pins 12, 13, 14, and 15 are currently not required to be explicitly enabled.*
 
 ## Setup & Installation
 
@@ -78,6 +81,7 @@ const char *carSSID = "BYU-Car-1";
 1. In the Arduino IDE, click **Sketch → Upload** (or press `Ctrl+U` / `Cmd+U`).
 2. Wait for the upload to complete. You should see "Done uploading" in the console.
 3. Once complete, the MB board is no longer needed (you can disconnect it).
+4. Upon successful boot, the onboard LED will flash three times to indicate the board was successfully flashed.
 
 ### 6. Drive!
 
