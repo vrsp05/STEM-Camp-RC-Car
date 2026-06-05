@@ -26,52 +26,55 @@ struct MOTOR_PINS {
   int pinIN2;
 };
 
-// Placeholder pins - the hardware team will update these later!
+// Placeholder pins!
 MOTOR_PINS rightMotor = {12, 13}; 
 MOTOR_PINS leftMotor  = {14, 15};
 
 // ===========================
-// Movement Functions
+// Software Speed Governor
+// ===========================
+int maxSpeed = 150; // Scale from 0 (Stop) to 255 (Full Throttle). 150 is a safe indoor speed.
+
+// ===========================
+// Movement Functions (PWM Upgraded)
 // ===========================
 void stopCar() {
-  digitalWrite(rightMotor.pinIN1, LOW);
-  digitalWrite(rightMotor.pinIN2, LOW);
-  digitalWrite(leftMotor.pinIN1, LOW);
-  digitalWrite(leftMotor.pinIN2, LOW);
+  ledcWrite(rightMotor.pinIN1, 0);
+  ledcWrite(rightMotor.pinIN2, 0);
+  ledcWrite(leftMotor.pinIN1, 0);
+  ledcWrite(leftMotor.pinIN2, 0);
   Serial.println("Car: STOP");
 }
 
 void driveForward() {
-  digitalWrite(rightMotor.pinIN1, HIGH);
-  digitalWrite(rightMotor.pinIN2, LOW);
-  digitalWrite(leftMotor.pinIN1, HIGH);
-  digitalWrite(leftMotor.pinIN2, LOW);
+  ledcWrite(rightMotor.pinIN1, maxSpeed);
+  ledcWrite(rightMotor.pinIN2, 0);
+  ledcWrite(leftMotor.pinIN1, maxSpeed);
+  ledcWrite(leftMotor.pinIN2, 0);
   Serial.println("Car: FORWARD");
 }
 
 void driveBackward() {
-  digitalWrite(rightMotor.pinIN1, LOW);
-  digitalWrite(rightMotor.pinIN2, HIGH);
-  digitalWrite(leftMotor.pinIN1, LOW);
-  digitalWrite(leftMotor.pinIN2, HIGH);
+  ledcWrite(rightMotor.pinIN1, 0);
+  ledcWrite(rightMotor.pinIN2, maxSpeed);
+  ledcWrite(leftMotor.pinIN1, 0);
+  ledcWrite(leftMotor.pinIN2, maxSpeed);
   Serial.println("Car: BACKWARD");
 }
 
 void turnRight() {
-  // Right motor spins backward, left motor spins forward
-  digitalWrite(rightMotor.pinIN1, LOW);
-  digitalWrite(rightMotor.pinIN2, HIGH);
-  digitalWrite(leftMotor.pinIN1, HIGH);
-  digitalWrite(leftMotor.pinIN2, LOW);
+  ledcWrite(rightMotor.pinIN1, 0);
+  ledcWrite(rightMotor.pinIN2, maxSpeed);
+  ledcWrite(leftMotor.pinIN1, maxSpeed);
+  ledcWrite(leftMotor.pinIN2, 0);
   Serial.println("Car: RIGHT");
 }
 
 void turnLeft() {
-  // Right motor spins forward, left motor spins backward
-  digitalWrite(rightMotor.pinIN1, HIGH);
-  digitalWrite(rightMotor.pinIN2, LOW);
-  digitalWrite(leftMotor.pinIN1, LOW);
-  digitalWrite(leftMotor.pinIN2, HIGH);
+  ledcWrite(rightMotor.pinIN1, maxSpeed);
+  ledcWrite(rightMotor.pinIN2, 0);
+  ledcWrite(leftMotor.pinIN1, 0);
+  ledcWrite(leftMotor.pinIN2, maxSpeed);
   Serial.println("Car: LEFT");
 }
 
@@ -133,11 +136,11 @@ void setup() {
   Serial.setDebugOutput(true);
   Serial.println();
 
-  // Initialize motor pins as power outputs
-  pinMode(rightMotor.pinIN1, OUTPUT);
-  pinMode(rightMotor.pinIN2, OUTPUT);
-  pinMode(leftMotor.pinIN1, OUTPUT);
-  pinMode(leftMotor.pinIN2, OUTPUT);
+  // Initialize motor pins as PWM speed outputs (1000 Hz, 8-bit resolution)
+  ledcAttach(rightMotor.pinIN1, 1000, 8);
+  ledcAttach(rightMotor.pinIN2, 1000, 8);
+  ledcAttach(leftMotor.pinIN1, 1000, 8);
+  ledcAttach(leftMotor.pinIN2, 1000, 8);
   
   // Ensure the car starts in a parked state
   stopCar();
