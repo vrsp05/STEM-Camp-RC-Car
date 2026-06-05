@@ -26,7 +26,7 @@ struct MOTOR_PINS {
   int pinIN2;
 };
 
-// Placeholder pins - the hardware team will update these later!
+// Placeholder pins!
 MOTOR_PINS rightMotor = {12, 13}; 
 MOTOR_PINS leftMotor  = {14, 15};
 
