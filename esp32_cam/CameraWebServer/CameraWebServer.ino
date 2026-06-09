@@ -26,9 +26,15 @@ struct MOTOR_PINS {
   int pinIN2;
 };
 
-// Placeholder pins!
-MOTOR_PINS rightMotor = {12, 13}; 
-MOTOR_PINS leftMotor  = {14, 15};
+// ===========================
+// Motor Pin Definitions
+// ===========================
+
+// Right Motor Channel (M1 & M2) -> Pins 13 & 12
+MOTOR_PINS rightMotor = {13, 12}; 
+
+// Left Motor Channel (M3 & M4) -> Pins 14 & 15
+MOTOR_PINS leftMotor = {14, 15};
 
 // ===========================
 // Software Speed Governor
@@ -87,44 +93,45 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
     Serial.print("Phone sent command: ");
     Serial.println(command);
 
-    // Look for a colon in the message (e.g., "led:128")
     int sepIndex = command.indexOf(':');
-    String cmdData = command.substring(sepIndex + 1);
     
-    if (sepIndex > 0) {
-      // Split the text into the Name and the Number
+    // ==========================================
+    // TYPE 1: SLIDER COMMANDS (Contains a ':')
+    // ==========================================
+    if (sepIndex > 0) { 
       String cmdName = command.substring(0, sepIndex);
-      int cmdValue = cmdData.toInt();
+      int cmdValue = command.substring(sepIndex + 1).toInt();
       
-      // Apply the settings to the physical hardware
       if (cmdName == "led") {
-        // Hardware Safety: Cap the physical brightness to 40 (out of 255) to prevent burning
         int safeValue = map(cmdValue, 0, 255, 0, 40); 
         ledcWrite(4, safeValue); 
       }
       else if (cmdName == "bright") {
         sensor_t * s = esp_camera_sensor_get();
-        s->set_brightness(s, cmdValue); // Change Camera Brightness
+        s->set_brightness(s, cmdValue);
       }
       else if (cmdName == "contrast") {
         sensor_t * s = esp_camera_sensor_get();
-        s->set_contrast(s, cmdValue); // Change Camera Contrast
+        s->set_contrast(s, cmdValue);
       }
-
-      // --- Motor Logic ---
-      else if (cmdName == "forward") {
+    }
+    // ==========================================
+    // TYPE 2: BUTTON COMMANDS (No ':')
+    // ==========================================
+    else { 
+      if (command == "forward") {
         driveForward();
       }
-      else if (cmdName == "backward") {
+      else if (command == "backward") {
         driveBackward();
       }
-      else if (cmdName == "left") {
+      else if (command == "left") {
         turnLeft();
       }
-      else if (cmdName == "right") {
+      else if (command == "right") {
         turnRight();
       }
-      else if (cmdName == "stop") {
+      else if (command == "stop") {
         stopCar();
       }
     }
