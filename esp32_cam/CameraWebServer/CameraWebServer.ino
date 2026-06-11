@@ -33,8 +33,8 @@ struct MOTOR_PINS {
 // Right Motor Channel (M1 & M2) -> Pins 13 & 12
 MOTOR_PINS rightMotor = {13, 12}; 
 
-// Left Motor Channel (M3 & M4) -> Pins 14 & 15
-MOTOR_PINS leftMotor = {14, 15};
+// Left Motor Channel (M3 & M4) -> Pins 15 & 14
+MOTOR_PINS leftMotor = {15, 14};
 
 // ===========================
 // Software Speed Governor
@@ -53,11 +53,15 @@ void stopCar() {
 }
 
 void driveForward() {
+  // Right side (M1 & M2) pushes forward
   ledcWrite(rightMotor.pinIN1, maxSpeed);
   ledcWrite(rightMotor.pinIN2, 0);
+  
+  // Left side (M3 & M4) pushes forward
   ledcWrite(leftMotor.pinIN1, maxSpeed);
   ledcWrite(leftMotor.pinIN2, 0);
-  Serial.println("Car: FORWARD");
+  
+  Serial.println("Car: FORWARD (Normal)");
 }
 
 void driveBackward() {
@@ -143,15 +147,6 @@ void setup() {
   Serial.setDebugOutput(true);
   Serial.println();
 
-  // Initialize motor pins as PWM speed outputs (1000 Hz, 8-bit resolution)
-  ledcAttach(rightMotor.pinIN1, 1000, 8);
-  ledcAttach(rightMotor.pinIN2, 1000, 8);
-  ledcAttach(leftMotor.pinIN1, 1000, 8);
-  ledcAttach(leftMotor.pinIN2, 1000, 8);
-  
-  // Ensure the car starts in a parked state
-  stopCar();
-
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -205,6 +200,15 @@ void setup() {
     Serial.printf("Camera init failed with error 0x%x", err);
     return;
   }
+
+  // Initialize motor pins as PWM speed outputs (1000 Hz, 8-bit resolution)
+  ledcAttach(rightMotor.pinIN1, 50, 8);
+  ledcAttach(rightMotor.pinIN2, 50, 8);
+  ledcAttach(leftMotor.pinIN1, 50, 8);
+  ledcAttach(leftMotor.pinIN2, 50, 8);
+  
+  // Ensure the car starts in a parked state
+  stopCar();
 
   sensor_t *s = esp_camera_sensor_get();
   
