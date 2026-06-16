@@ -18,7 +18,6 @@ A robust, low-cost, and low-latency RC car software framework designed for educa
 - **Chassis:** Custom PCB. [[Link]()]
 - **Power Supply:** 4 AA battery pack [[Link](https://www.aliexpress.us/item/2255799895517935.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en2255799895517935&ds_e_product_merchant_id=109204739&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V6zV6XEK94hojw_-oD1P6xNap2T9IkF80AHEtQx7qn7wH8S5d1uNaBoC5PEQAvD_BwE&gatewayAdapt=glo2usa)]. *(Note: You will need to provide 4 of your own good quality AA batteries).*
 - **Power Switch:** SLW-1276864-4A-D switch for car control. [[Link](https://www.digikey.com/en/products/detail/same-sky-formerly-cui-devices-/SLW-1276864-4A-D/21259972?gclsrc=aw.ds&gad_source=1&gad_campaignid=20243136172&gbraid=0AAAAADrbLlj1fOpVS-J9OCclJDTSNeTLj&gclid=CjwKCAjwuanRBhBSEiwAY5y6V0a4BwxcfrwDMveePxhBp6Lb_C-T54p6c8k-7GsEpx2MxBAeGH0KEhoCDD4QAvD_BwE)]
-- **Indicator:** Onboard LED with brightness settings (0 = off, 40 = highest brightness).
 
 *Note: Do not power the motors directly from the ESP32!*
 
