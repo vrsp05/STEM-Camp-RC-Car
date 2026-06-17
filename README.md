@@ -11,30 +11,42 @@ A robust, low-cost, and low-latency RC car software framework designed for educa
 
 ## Hardware Requirements
 
-- **Microcontroller:** ESP32-CAM with OV2640 sensor (recommended). OV3660 is compatible but may not perform as well.
-- **Motors:** Four TT DC gearbox motors with retractable design for easy suitcase storage
-- **Motor Driver:** To be decided
-- **Chassis:** To be decided
-- **Power Supply:** 3 AAA battery pack
-- **Power Switch:** SLW-1276864-4A-D switch for car control
-- **Indicator:** Onboard LED with brightness settings (0 = off, 40 = highest brightness)
+- **Microcontroller:** ESP32-CAM with OV2640 sensor (recommended). OV3660 is compatible but may not perform as well. [[Link](https://www.aliexpress.us/item/3256806346200289.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en3256806346200289&ds_e_product_merchant_id=5352158365&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V101Z4Zg7qYjB7jEohQEXXXkJtaJuUl7Fb8nahwqdjlZUxWY4VXrlRoCbLwQAvD_BwE&gatewayAdapt=glo2usa)]
+- **Motors:** Four TT DC gearbox motors with retractable design for easy suitcase storage. [[Link](https://www.aliexpress.us/item/3256809725271346.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en3256809725271346&ds_e_product_merchant_id=5640842084&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V23h5dibXUOXUa0smJ8FFr1nYl_yUjkY2SpRhDMMLlLAYPJRrs-16hoCsjcQAvD_BwE&gatewayAdapt=glo2usa)]
+- **Wheels:** Four compatible TT motor rubber wheels. [[Link](https://www.aliexpress.us/item/3256809725271346.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en3256809725271346&ds_e_product_merchant_id=5640842084&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V23h5dibXUOXUa0smJ8FFr1nYl_yUjkY2SpRhDMMLlLAYPJRrs-16hoCsjcQAvD_BwE&gatewayAdapt=glo2usa)]
+- **Motor Driver:** DRV8833. [[Link](https://www.aliexpress.us/item/3256808512860623.html?src=google&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en3256808512860623&ds_e_product_merchant_id=5560538802&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=19558607238&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=19566915268&gbraid=0AAAAAD6I-hHcVpRLmtsNOLYqdC36jl_6Q&gclid=CjwKCAjwuanRBhBSEiwAY5y6VxsEeO_oh6zBLbQ3QillTrRul9A80BLu5ZrUFSNyDJvnp-FDlmZOYBoCc3YQAvD_BwE&gatewayAdapt=glo2usa)]
+- **Chassis:** Custom PCB. [[Link]()]
+- **Power Supply:** 4 AA battery pack [[Link](https://www.aliexpress.us/item/2255799895517935.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en2255799895517935&ds_e_product_merchant_id=109204739&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V6zV6XEK94hojw_-oD1P6xNap2T9IkF80AHEtQx7qn7wH8S5d1uNaBoC5PEQAvD_BwE&gatewayAdapt=glo2usa)]. *(Note: You will need to provide 4 of your own good quality AA batteries).*
+- **Power Switch:** SLW-1276864-4A-D switch for car control. [[Link](https://www.digikey.com/en/products/detail/same-sky-formerly-cui-devices-/SLW-1276864-4A-D/21259972?gclsrc=aw.ds&gad_source=1&gad_campaignid=20243136172&gbraid=0AAAAADrbLlj1fOpVS-J9OCclJDTSNeTLj&gclid=CjwKCAjwuanRBhBSEiwAY5y6V0a4BwxcfrwDMveePxhBp6Lb_C-T54p6c8k-7GsEpx2MxBAeGH0KEhoCDD4QAvD_BwE)]
 
 *Note: Do not power the motors directly from the ESP32!*
 
-## Wiring Guide (Work in Progress)
+## Wiring Guide (Custom PCB Reference)
 
-The following is a reference wiring diagram for typical motor driver configurations. Specific hardware selections are still being finalized.
+The following is the internal wiring reference for the Custom PCB, connecting the ESP32-CAM to the onboard DRV8833 motor driver. 
 
-| ESP32-CAM Pin | Motor Driver Pin | Function |
+| ESP32-CAM Pin | DRV8833 Pin | Function |
 | :--- | :--- | :--- |
-| `GPIO 12` | Motor 1 Control | Motor 1 |
-| `GPIO 13` | Motor 2 Control | Motor 2 |
-| `GPIO 14` | Motor 3 Control | Motor 3 |
-| `GPIO 15` | Motor 4 Control | Motor 4 |
-| `5V` | `5V Out` | Power to ESP32 |
+| `GPIO 13` | `IN1` | Right Motors (M3 & M4) PWM |
+| `GPIO 12` | `IN2` | Right Motors (M3 & M4) PWM |
+| `GPIO 15` | `IN3` | Left Motors (M1 & M2) PWM |
+| `GPIO 14` | `IN4` | Left Motors (M1 & M2) PWM |
+| `5V` | `VCC` | Power to ESP32 |
 | `GND` | `GND` | Common Ground |
 
+*Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins. The left motor logic (Pins 14 & 15) is intentionally inverted in the software to account for the physical motor orientation.*
+
 *Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins. GPIO pins 12, 13, 14, and 15 are currently not required to be explicitly enabled.*
+
+### Crucial Assembly Warning: The "Mirror Effect"
+
+When assembling the chassis, be aware that the front and back motors on each side (e.g., M1 and M2) share the exact same electrical channel on the custom PCB. They will always receive the exact same "forward" or "backward" signal from the code. 
+
+However, because the back motors are physically mounted facing the opposite direction of the front motors on standard TT chassis kits, sending a "forward" signal will cause the back wheels to mechanically spin backward. The car will fight itself and refuse to drive.
+
+**To fix this, you must do ONE of the following to the two BACK motors (M2 and M4) before testing:**
+* **Option A (Recommended):** Unclip the back motors from the plastic chassis, physically flip them upside down (180 degrees), and clip them back in. This reverses their mechanical rotation to match the front wheels.
+* **Option B (If motors cannot be removed):** Desolder and swap the two wires directly at the copper tabs on the motor casing itself. This reverses their electrical polarity to bypass the PCB's parallel wiring.
 
 ## Setup & Installation
 
@@ -96,8 +108,11 @@ This project was built to scale for classroom environments. By utilizing hardcod
 
 ## Credits
 
-This project builds upon excellent educational resources from the community:
+**Hardware & Custom PCB Design:**
+- **Dan Barry** and **Jaime Mejia** for engineering the custom PCB and assembling the physical hardware of the car.
 
+**Software & Inspiration:**
+This project builds upon excellent educational resources from the community:
 - [ESP32-CAM Streaming with Motor Control](https://www.youtube.com/watch?v=7I4SnUXxUR0&t=2s) by Jeevan Jee
 - [Simple Circuits Tutorial](https://www.youtube.com/watch?v=Du1UvHnD-ZM) by Simple Circuits
 - [ESP32-CAM Car Robot Web Server](https://randomnerdtutorials.com/esp32-cam-car-robot-web-server/) by Random Nerd Tutorials
