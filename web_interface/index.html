@@ -3,756 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BYU STEM Camp RC Car - Live Stream</title>
+    <title>BYU STEM Camp RC Car</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --byu-blue: #003478; --white: #ffffff; --light-gray: #f5f5f5; }
+        body { background-color: var(--byu-blue); color: #333; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        .header { background: var(--white); width: 100%; padding: 15px; text-align: center; border-bottom: 4px solid #0055B7; margin-bottom: 10px;}
+        .header h1 { color: var(--byu-blue); font-size: 1.5em; }
+        
+        .container { background: var(--white); padding: 20px; border-radius: 12px; max-width: 600px; width: 95%; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        
+        .video-box { width: 100%; background: #000; border: 3px solid var(--byu-blue); border-radius: 8px; aspect-ratio: 4/3; overflow: hidden; margin-bottom: 20px;}
+        img#stream { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* The D-Pad Layout */
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 300px; margin: 0 auto 20px auto; }
+        .controls button { padding: 20px 0; font-size: 1.2em; font-weight: bold; background: var(--byu-blue); color: white; border: none; border-radius: 8px; cursor: pointer; user-select: none; -webkit-user-select: none;}
+        .controls button:active { background: #0055B7; transform: scale(0.95); }
+        
+        #btn-fwd { grid-column: 2; }
+        #btn-left { grid-column: 1; }
+        #btn-stop { grid-column: 2; background: #dc2626; }
+        #btn-right { grid-column: 3; }
+        #btn-rev { grid-column: 2; }
 
-        :root {
-            --byu-blue: #003478;
-            --byu-light-blue: #0055B7;
-            --white: #ffffff;
-            --light-gray: #f5f5f5;
-            --dark-gray: #333333;
-        }
+        /* Sliders Layout */
+        .slider-group { background: var(--light-gray); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--byu-blue); }
+        .slider-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .slider-row:last-child { margin-bottom: 0; }
+        .slider-label { font-weight: bold; font-size: 0.9em; width: 100px; }
+        input[type="range"] { flex-grow: 1; margin: 0 10px; cursor: pointer; }
+        .slider-val { width: 30px; text-align: right; font-size: 0.9em; font-family: monospace; color: var(--byu-blue); font-weight: bold;}
 
-        body {
-            background-color: var(--byu-blue);
-            color: var(--dark-gray);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-        }
-
-        header {
-            background-color: var(--white);
-            padding: 15px 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-bottom: 4px solid var(--byu-blue);
-        }
-
-        .header-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .byu-logo {
-            height: 40px;
-            width: auto;
-        }
-
-        .header-text h1 {
-            font-size: 1.8em;
-            color: var(--byu-blue);
-            margin: 0;
-            font-weight: 700;
-        }
-
-        .header-text p {
-            font-size: 0.9em;
-            color: #666;
-            margin: 2px 0 0 0;
-        }
-
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .stream-section {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            margin-bottom: 25px;
-        }
-
-        .stream-title {
-            font-size: 1.3em;
-            color: var(--byu-blue);
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .stream-container {
-            background: #000;
-            border: 3px solid var(--byu-blue);
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            aspect-ratio: 4 / 3;
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        canvas {
-            max-width: 100%;
-            max-height: 100%;
-            display: block;
-        }
-
-        .config-section {
-            background-color: var(--light-gray);
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid var(--byu-blue);
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .config-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-size: 0.95em;
-            color: var(--byu-blue);
-            font-weight: 600;
-        }
-
-        .config-section input {
-            padding: 10px 12px;
-            border: 2px solid var(--byu-blue);
-            border-radius: 6px;
-            background: var(--white);
-            color: var(--dark-gray);
-            font-size: 1em;
-            min-width: 150px;
-            transition: border-color 0.2s;
-        }
-
-        .config-section input:focus {
-            outline: none;
-            border-color: var(--byu-light-blue);
-            box-shadow: 0 0 8px rgba(0, 83, 183, 0.2);
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: var(--byu-blue);
-            color: var(--white);
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1em;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: var(--byu-light-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 52, 120, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button.disconnect-btn {
-            background-color: #dc2626;
-        }
-
-        button.disconnect-btn:hover {
-            background-color: #991b1b;
-        }
-
-        button.accordion-btn {
-            background-color: #f59e0b;
-            width: 100%;
-            text-align: left;
-            padding: 12px 15px;
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        button.accordion-btn:hover {
-            background-color: #d97706;
-        }
-
-        button.accordion-btn.active {
-            background-color: #d97706;
-        }
-
-        .accordion-icon {
-            display: inline-block;
-            transition: transform 0.3s ease;
-        }
-
-        button.accordion-btn.active .accordion-icon {
-            transform: rotate(180deg);
-        }
-
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background-color: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 0 15px;
-        }
-
-        .accordion-content.open {
-            max-height: 1000px;
-            padding: 15px;
-        }
-
-        .advanced-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .advanced-controls .config-group {
-            background-color: var(--white);
-            padding: 10px;
-            border-radius: 6px;
-        }
-
-        .status {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            font-size: 0.95em;
-            padding: 10px 15px;
-            background-color: var(--white);
-            border: 2px solid var(--byu-blue);
-            border-radius: 6px;
-            width: fit-content;
-            margin-left: auto;
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .status-indicator.connected {
-            background: #22c55e;
-            box-shadow: 0 0 12px #22c55e;
-        }
-
-        .status-indicator.disconnected {
-            background: #ef4444;
-            animation: none;
-        }
-
-        .status-indicator.connecting {
-            background: #eab308;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        .error-message {
-            background-color: #fee2e2;
-            border: 2px solid #dc2626;
-            color: #991b1b;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: none;
-            font-weight: 500;
-        }
-
-        .error-message.show {
-            display: block;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .info-text {
-            text-align: center;
-            font-size: 0.85em;
-            color: #999;
-            margin-top: 15px;
-        }
-
-        footer {
-            background-color: var(--byu-blue);
-            color: var(--white);
-            text-align: center;
-            padding: 20px;
-            margin-top: auto;
-            font-size: 0.9em;
-        }
-
-        footer a {
-            color: #bfdbfe;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .byu-logo {
-                height: 35px;
-            }
-            
-            .header-text h1 {
-                font-size: 1.4em;
-            }
-            
-            .config-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .config-section input {
-                min-width: 100%;
-            }
-            
-            .status {
-                margin-left: 0;
-                margin-top: 10px;
-                width: 100%;
-                justify-content: center;
-            }
-            
-            button {
-                flex: 1;
-            }
-            
-            .container {
-                padding: 15px 10px;
-            }
-            
-            .stream-section {
-                padding: 15px;
-            }
-        }
+        .status { text-align: center; font-size: 0.9em; color: #666; font-weight: bold; margin-top: 10px;}
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <img src="BYU-Logo.png" alt="BYU Logo" class="byu-logo">
-            <div class="header-text">
-                <h1>RC Car Live Stream</h1>
-                <p>BYU STEM Camp 2026</p>
-            </div>
-        </div>
-    </header>
 
-    <div class="container">
-        <div id="errorMessage" class="error-message"></div>
-        
-        <div class="stream-section">
-            <h2 class="stream-title">Live Video Feed</h2>
-            
-            <div class="stream-container">
-                <canvas id="canvas"></canvas>
-            </div>
-            
-            <div class="config-section">
-                <div class="config-group">
-                    <label for="ipInput">ESP32 IP Address:</label>
-                    <input type="text" id="ipInput" placeholder="192.168.1.100" value="172.20.10.4">
-                </div>
-                <div class="config-group">
-                    <label for="portInput">Stream Port:</label>
-                    <input type="number" id="portInput" placeholder="81" value="81" min="1" max="65535">
-                </div>
-                <button onclick="connectStream()">Connect</button>
-                <button class="disconnect-btn" onclick="disconnectStream()">Disconnect</button>
-                <div class="status">
-                    <div class="status-indicator disconnected" id="statusIndicator"></div>
-                    <span id="statusText">Disconnected</span>
-                </div>
-            </div>
-
-            <!-- Advanced Settings Accordion -->
-            <button class="accordion-btn" id="advancedBtn" onclick="toggleAdvanced()">
-                ⚙️ Advanced Settings
-                <span class="accordion-icon">▼</span>
-            </button>
-            <div class="accordion-content" id="advancedContent">
-                <div class="advanced-controls">
-                    <div class="config-group">
-                        <label for="reconnectInput">Max Reconnect Attempts:</label>
-                        <input type="number" id="reconnectInput" value="5" min="1" max="20">
-                    </div>
-                    <div class="config-group">
-                        <label for="reconnectDelayInput">Reconnect Delay (ms):</label>
-                        <input type="number" id="reconnectDelayInput" value="2000" min="500" max="10000" step="500">
-                    </div>
-                    <div class="config-group">
-                        <label for="timeoutInput">Connection Timeout (ms):</label>
-                        <input type="number" id="timeoutInput" value="5000" min="2000" max="15000" step="500">
-                    </div>
-                    <button onclick="clearLocalStorage()">Clear Saved Settings</button>
-                    <button onclick="showDebugInfo()">Show Debug Info</button>
-                </div>
-            </div>
-
-            <p class="info-text">Configuration saved automatically • Auto-reconnects on disconnect</p>
-        </div>
+    <div class="header">
+        <h1>RC Car Live Stream</h1>
+        <p>BYU STEM Camp</p>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Brigham Young University STEM Camp • <a href="https://www.byu.edu">Visit BYU.edu</a></p>
-    </footer>
+    <div class="container">
+        <div class="video-box">
+            <img id="stream" src="" alt="Live Video">
+        </div>
+
+        <div class="controls">
+            <div></div>
+            <button id="btn-fwd">▲</button>
+            <div></div>
+            <button id="btn-left">◀</button>
+            <button id="btn-stop">■</button>
+            <button id="btn-right">▶</button>
+            <div></div>
+            <button id="btn-rev">▼</button>
+            <div></div>
+        </div>
+
+        <div class="slider-group">
+            <div class="slider-row">
+                <span class="slider-label">Headlights</span>
+                <input type="range" id="led-slider" min="0" max="40" value="0">
+                <span class="slider-val" id="led-val">0</span>
+            </div>
+            <div class="slider-row">
+                <span class="slider-label">Brightness</span>
+                <input type="range" id="bright-slider" min="-2" max="2" value="0">
+                <span class="slider-val" id="bright-val">0</span>
+            </div>
+            <div class="slider-row">
+                <span class="slider-label">Contrast</span>
+                <input type="range" id="contrast-slider" min="-2" max="2" value="0">
+                <span class="slider-val" id="contrast-val">0</span>
+            </div>
+        </div>
+        
+        <div class="status" id="ws-status">Connecting to Car...</div>
+    </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const ipInput = document.getElementById('ipInput');
-        const portInput = document.getElementById('portInput');
-        const statusIndicator = document.getElementById('statusIndicator');
-        const statusText = document.getElementById('statusText');
-        const errorMessage = document.getElementById('errorMessage');
-        const reconnectInput = document.getElementById('reconnectInput');
-        const reconnectDelayInput = document.getElementById('reconnectDelayInput');
-        const timeoutInput = document.getElementById('timeoutInput');
-        const advancedBtn = document.getElementById('advancedBtn');
-        const advancedContent = document.getElementById('advancedContent');
+        window.onload = function() {
+            var streamUrl = window.location.protocol + '//' + window.location.hostname + ':81/stream';
+            document.getElementById('stream').src = streamUrl;
+        };
 
-        let streamController = null;
-        let isConnecting = false;
-        let isConnected = false;
-        let reconnectAttempts = 0;
-        let MAX_RECONNECT_ATTEMPTS = 5;
-        let RECONNECT_DELAY = 2000;
-        let CONNECTION_TIMEOUT = 5000;
+        var ws;
+        var statusText = document.getElementById('ws-status');
 
-        // Load saved settings from localStorage and URL parameters
-        window.addEventListener('DOMContentLoaded', () => {
-            // Check URL parameters first (for proxy server)
-            const urlParams = new URLSearchParams(window.location.search);
-            const paramIP = urlParams.get('ip');
-            const paramPort = urlParams.get('port');
-            
-            // Fall back to localStorage, then defaults
-            const savedIP = paramIP || localStorage.getItem('rcCarIP') || '172.20.10.4';
-            const savedPort = paramIP || localStorage.getItem('rcCarPort') || '81';
-            const savedMaxReconnect = localStorage.getItem('maxReconnect') || '5';
-            const savedReconnectDelay = localStorage.getItem('reconnectDelay') || '2000';
-            const savedTimeout = localStorage.getItem('connectionTimeout') || '5000';
-            
-            ipInput.value = savedIP;
-            portInput.value = savedPort;
-            reconnectInput.value = savedMaxReconnect;
-            reconnectDelayInput.value = savedReconnectDelay;
-            timeoutInput.value = savedTimeout;
-            
-            // Update the globals
-            MAX_RECONNECT_ATTEMPTS = parseInt(savedMaxReconnect);
-            RECONNECT_DELAY = parseInt(savedReconnectDelay);
-            CONNECTION_TIMEOUT = parseInt(savedTimeout);
-            
-            // Save to localStorage for next visit
-            localStorage.setItem('rcCarIP', savedIP);
-            localStorage.setItem('rcCarPort', savedPort);
-            localStorage.setItem('maxReconnect', savedMaxReconnect);
-            localStorage.setItem('reconnectDelay', savedReconnectDelay);
-            localStorage.setItem('connectionTimeout', savedTimeout);
-            
-            // Set canvas resolution
-            canvas.width = 640;
-            canvas.height = 480;
-            
-            // Draw initial message
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#666';
-            ctx.font = '20px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('Ready to connect', canvas.width / 2, canvas.height / 2);
-            
-            // Auto-connect on page load
-            setTimeout(() => connectStream(), 500);
-        });
-
-        // Save settings when changed
-        ipInput.addEventListener('change', () => {
-            localStorage.setItem('rcCarIP', ipInput.value);
-        });
-        portInput.addEventListener('change', () => {
-            localStorage.setItem('rcCarPort', portInput.value);
-        });
-        reconnectInput.addEventListener('change', () => {
-            MAX_RECONNECT_ATTEMPTS = parseInt(reconnectInput.value);
-            localStorage.setItem('maxReconnect', reconnectInput.value);
-        });
-        reconnectDelayInput.addEventListener('change', () => {
-            RECONNECT_DELAY = parseInt(reconnectDelayInput.value);
-            localStorage.setItem('reconnectDelay', reconnectDelayInput.value);
-        });
-        timeoutInput.addEventListener('change', () => {
-            CONNECTION_TIMEOUT = parseInt(timeoutInput.value);
-            localStorage.setItem('connectionTimeout', timeoutInput.value);
-        });
-
-        function toggleAdvanced() {
-            advancedBtn.classList.toggle('active');
-            advancedContent.classList.toggle('open');
-        }
-
-        function clearLocalStorage() {
-            localStorage.clear();
-            alert('Saved settings cleared. Page will reload.');
-            location.reload();
-        }
-
-        function showDebugInfo() {
-            const debugInfo = {
-                'ESP32 IP': ipInput.value,
-                'Stream Port': portInput.value,
-                'Max Reconnect': MAX_RECONNECT_ATTEMPTS,
-                'Reconnect Delay': RECONNECT_DELAY + 'ms',
-                'Connection Timeout': CONNECTION_TIMEOUT + 'ms',
-                'Current Status': statusText.textContent,
-                'Browser': navigator.userAgent.substring(0, 50)
+        function connectWebSocket() {
+            ws = new WebSocket('ws://' + window.location.hostname + ':82/');
+            ws.onopen = function() {
+                statusText.innerText = "Car Connected & Ready!";
+                statusText.style.color = "green";
             };
-            console.table(debugInfo);
-            alert('Debug info logged to console. Press F12 to view.');
+            ws.onclose = function() {
+                statusText.innerText = "Connection Lost. Reconnecting...";
+                statusText.style.color = "red";
+                setTimeout(connectWebSocket, 2000);
+            };
         }
+        connectWebSocket();
 
-        function setStatus(status, message) {
-            statusIndicator.className = 'status-indicator ' + status;
-            statusText.textContent = message;
-            isConnected = status === 'connected';
-        }
-
-        function showError(message) {
-            errorMessage.textContent = '⚠️ ' + message;
-            errorMessage.classList.add('show');
-            setTimeout(() => {
-                errorMessage.classList.remove('show');
-            }, 5000);
-        }
-
-        function connectStream() {
-            if (isConnecting) return;
-            
-            const ip = ipInput.value.trim();
-            const port = portInput.value.trim();
-            
-            if (!ip) {
-                showError('Please enter ESP32 IP address');
-                return;
+        function sendCommand(cmd) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(cmd);
             }
-            
-            disconnectStream();
-            
-            isConnecting = true;
-            reconnectAttempts = 0;
-            setStatus('connecting', 'Connecting...');
-            
-            // Use proxy server (passes IP/port as query params)
-            const streamURL = `/stream?ip=${encodeURIComponent(ip)}&port=${encodeURIComponent(port)}`;
-            
-            streamController = new AbortController();
-            
-            // Use a timeout to handle hung connections
-            const timeoutId = setTimeout(() => {
-                if (isConnecting) {
-                    console.warn('Connection timeout, retrying...');
-                    handleStreamDisconnect();
-                }
-            }, CONNECTION_TIMEOUT);
-            
-            fetch(streamURL, {
-                signal: streamController.signal
-            })
-            .then(response => {
-                clearTimeout(timeoutId);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.body.getReader();
-            })
-            .then(reader => {
-                isConnecting = false;
-                setStatus('connected', 'Connected');
-                reconnectAttempts = 0;
-                
-                processMJPEG(reader);
-            })
-            .catch(err => {
-                clearTimeout(timeoutId);
-                if (err.name !== 'AbortError') {
-                    console.error('Stream error:', err);
-                    handleStreamDisconnect();
-                }
+        }
+
+        // D-Pad Listeners
+        const btns = ['fwd', 'rev', 'left', 'right'];
+        const actions = ['forward', 'backward', 'left', 'right'];
+        
+        btns.forEach((id, index) => {
+            let el = document.getElementById('btn-' + id);
+            let action = actions[index];
+            el.addEventListener('mousedown', () => sendCommand(action));
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand(action); });
+            el.addEventListener('mouseup', () => sendCommand('stop'));
+            el.addEventListener('touchend', (e) => { e.preventDefault(); sendCommand('stop'); });
+        });
+
+        let stopBtn = document.getElementById('btn-stop');
+        stopBtn.addEventListener('click', () => sendCommand('stop'));
+        stopBtn.addEventListener('touchstart', (e) => { e.preventDefault(); sendCommand('stop'); });
+
+        // Slider Listeners
+        function setupSlider(id, cmdPrefix) {
+            let slider = document.getElementById(id + '-slider');
+            let display = document.getElementById(id + '-val');
+            slider.addEventListener('input', function() {
+                display.innerText = this.value;
+                sendCommand(cmdPrefix + ':' + this.value);
             });
         }
 
-        function processMJPEG(reader) {
-            let buffer = new Uint8Array(0);
-            
-            function read() {
-                reader.read().then(({ done, value }) => {
-                    if (done) {
-                        handleStreamDisconnect();
-                        return;
-                    }
-                    
-                    // Append new chunk to buffer
-                    buffer = new Uint8Array([...buffer, ...value]);
-                    
-                    // Try to extract and display frames
-                    while (buffer.length > 0) {
-                        // Look for the start of a frame (FFD8 = JPEG SOI marker)
-                        let jpegStart = -1;
-                        for (let i = 0; i < buffer.length - 1; i++) {
-                            if (buffer[i] === 0xFF && buffer[i + 1] === 0xD8) {
-                                jpegStart = i;
-                                break;
-                            }
-                        }
-                        
-                        if (jpegStart === -1) {
-                            // No JPEG start found, keep last 2 bytes in case boundary is split
-                            buffer = buffer.slice(Math.max(0, buffer.length - 2));
-                            break;
-                        }
-                        
-                        // Look for end of JPEG (FFD9 = JPEG EOI marker)
-                        let jpegEnd = -1;
-                        for (let i = jpegStart + 2; i < buffer.length - 1; i++) {
-                            if (buffer[i] === 0xFF && buffer[i + 1] === 0xD9) {
-                                jpegEnd = i + 2;
-                                break;
-                            }
-                        }
-                        
-                        if (jpegEnd === -1) {
-                            // Incomplete frame, wait for more data
-                            buffer = buffer.slice(jpegStart);
-                            break;
-                        }
-                        
-                        // Extract and display the complete JPEG frame
-                        const jpegData = buffer.slice(jpegStart, jpegEnd);
-                        displayFrame(jpegData);
-                        
-                        // Remove processed data from buffer
-                        buffer = buffer.slice(jpegEnd);
-                    }
-                    
-                    // Continue reading
-                    read();
-                }).catch(err => {
-                    if (err.name !== 'AbortError') {
-                        console.error('Read error:', err);
-                        handleStreamDisconnect();
-                    }
-                });
-            }
-            
-            read();
-        }
-
-        function displayFrame(jpegData) {
-            const blob = new Blob([jpegData], { type: 'image/jpeg' });
-            const url = URL.createObjectURL(blob);
-            
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                URL.revokeObjectURL(url);
-            };
-            img.onerror = () => {
-                console.error('Failed to decode frame');
-                URL.revokeObjectURL(url);
-            };
-            img.src = url;
-        }
-
-        function handleStreamDisconnect() {
-            isConnecting = false;
-            
-            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-                reconnectAttempts++;
-                setStatus('connecting', `Reconnecting (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
-                setTimeout(() => {
-                    if (isConnected || isConnecting) return;
-                    connectStream();
-                }, RECONNECT_DELAY);
-            } else {
-                setStatus('disconnected', 'Disconnected');
-                showError('Failed to connect after ' + MAX_RECONNECT_ATTEMPTS + ' attempts. Check ESP32 IP address and ensure it\'s online.');
-                
-                // Clear canvas
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#666';
-                ctx.font = '20px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('Connection Failed', canvas.width / 2, canvas.height / 2 - 20);
-                ctx.font = '14px sans-serif';
-                ctx.fillText('Check IP address and try again', canvas.width / 2, canvas.height / 2 + 20);
-            }
-        }
-
-        function disconnectStream() {
-            isConnecting = false;
-            isConnected = false;
-            if (streamController) {
-                streamController.abort();
-                streamController = null;
-            }
-            setStatus('disconnected', 'Disconnected');
-            
-            // Clear canvas
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#666';
-            ctx.font = '20px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('Disconnected', canvas.width / 2, canvas.height / 2);
-        }
+        setupSlider('led', 'led');
+        setupSlider('bright', 'bright');
+        setupSlider('contrast', 'contrast');
     </script>
 </body>
 </html>
