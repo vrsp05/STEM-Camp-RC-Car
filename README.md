@@ -36,8 +36,6 @@ The following is the internal wiring reference for the Custom PCB, connecting th
 
 *Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins. The left motor logic (Pins 14 & 15) is intentionally inverted in the software to account for the physical motor orientation.*
 
-*Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins. GPIO pins 12, 13, 14, and 15 are currently not required to be explicitly enabled.*
-
 ### Crucial Assembly Warning: The "Mirror Effect"
 
 When assembling the chassis, be aware that the front and back motors on each side (e.g., M1 and M2) share the exact same electrical channel on the custom PCB. They will always receive the exact same "forward" or "backward" signal from the code. 
@@ -120,7 +118,7 @@ This project builds upon excellent educational resources from the community:
 
 ## About This Project
 
-This is a demonstration project built by Victor Rafael Santana for the BYU STEM Camp (2026). It showcases how embedded systems and IoT technology can be integrated into a fun, interactive workshop experience. The goal is to provide students with hands-on experience building and controlling robot cars, while learning about microcontrollers, wireless networking, web servers, and real-time systems.
+This is a demonstration project built by Victor Santana, Jaime Mejia, and Dan Barry for the BYU STEM Camp (2026). It showcases how embedded systems and IoT technology can be integrated into a fun, interactive workshop experience. The goal is to provide students with hands-on experience building and controlling robot cars, while learning about microcontrollers, wireless networking, web servers, and real-time systems.
 
 This project is proposed as a potential new workshop offering for the BYU STEM Camp to enhance the educational experience and inspire students interested in robotics and embedded systems.
 
