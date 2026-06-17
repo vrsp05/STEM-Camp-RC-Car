@@ -93,6 +93,9 @@ const char *carSSID = "BYU-Car-1";
 3. Once complete, the MB board is no longer needed (you can disconnect it).
 4. Upon successful boot, the onboard LED will flash three times to indicate the board was successfully flashed.
 
+> ** Crucial Flashing Warning: ** > You MUST completely remove the ESP32-CAM from the custom car PCB before flashing. If you attempt to flash the code while the ESP32 is plugged into the car, the copper traces on the PCB will act as antennas, pick up electrical noise, and cause a `Packet content transfer stopped` fatal error. 
+> 
+> *Tip: Ensure your Arduino IDE upload speed is set to `115200` for the most stable data transfer.*
 ### 6. Drive!
 
 1. Power on the car.
