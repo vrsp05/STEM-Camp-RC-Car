@@ -21,20 +21,32 @@ A robust, low-cost, and low-latency RC car software framework designed for educa
 
 *Note: Do not power the motors directly from the ESP32!*
 
-## Wiring Guide (Work in Progress)
+## Wiring Guide (Custom PCB Reference)
 
-The following is a reference wiring diagram for typical motor driver configurations. Specific hardware selections are still being finalized.
+The following is the internal wiring reference for the Custom PCB, connecting the ESP32-CAM to the onboard DRV8833 motor driver. 
 
-| ESP32-CAM Pin | Motor Driver Pin | Function |
+| ESP32-CAM Pin | DRV8833 Pin | Function |
 | :--- | :--- | :--- |
-| `GPIO 12` | Motor 1 Control | Motor 1 |
-| `GPIO 13` | Motor 2 Control | Motor 2 |
-| `GPIO 14` | Motor 3 Control | Motor 3 |
-| `GPIO 15` | Motor 4 Control | Motor 4 |
-| `5V` | `5V Out` | Power to ESP32 |
+| `GPIO 13` | `IN1` | Right Motors (M3 & M4) PWM |
+| `GPIO 12` | `IN2` | Right Motors (M3 & M4) PWM |
+| `GPIO 15` | `IN3` | Left Motors (M1 & M2) PWM |
+| `GPIO 14` | `IN4` | Left Motors (M1 & M2) PWM |
+| `5V` | `VCC` | Power to ESP32 |
 | `GND` | `GND` | Common Ground |
 
+*Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins. The left motor logic (Pins 14 & 15) is intentionally inverted in the software to account for the physical motor orientation.*
+
 *Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins. GPIO pins 12, 13, 14, and 15 are currently not required to be explicitly enabled.*
+
+### Crucial Assembly Warning: The "Mirror Effect"
+
+When assembling the chassis, be aware that the front and back motors on each side (e.g., M1 and M2) share the exact same electrical channel on the custom PCB. They will always receive the exact same "forward" or "backward" signal from the code. 
+
+However, because the back motors are physically mounted facing the opposite direction of the front motors on standard TT chassis kits, sending a "forward" signal will cause the back wheels to mechanically spin backward. The car will fight itself and refuse to drive.
+
+**To fix this, you must do ONE of the following to the two BACK motors (M2 and M4) before testing:**
+* **Option A (Recommended):** Unclip the back motors from the plastic chassis, physically flip them upside down (180 degrees), and clip them back in. This reverses their mechanical rotation to match the front wheels.
+* **Option B (If motors cannot be removed):** Desolder and swap the two wires directly at the copper tabs on the motor casing itself. This reverses their electrical polarity to bypass the PCB's parallel wiring.
 
 ## Setup & Installation
 
@@ -96,8 +108,11 @@ This project was built to scale for classroom environments. By utilizing hardcod
 
 ## Credits
 
-This project builds upon excellent educational resources from the community:
+**Hardware & Custom PCB Design:**
+- **Dan Barry** and **Jaime Mejia** for engineering the custom PCB and assembling the physical hardware of the car.
 
+**Software & Inspiration:**
+This project builds upon excellent educational resources from the community:
 - [ESP32-CAM Streaming with Motor Control](https://www.youtube.com/watch?v=7I4SnUXxUR0&t=2s) by Jeevan Jee
 - [Simple Circuits Tutorial](https://www.youtube.com/watch?v=Du1UvHnD-ZM) by Simple Circuits
 - [ESP32-CAM Car Robot Web Server](https://randomnerdtutorials.com/esp32-cam-car-robot-web-server/) by Random Nerd Tutorials
