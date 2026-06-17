@@ -96,12 +96,25 @@ const char *carSSID = "BYU-Car-1";
 > ** Crucial Flashing Warning: ** > You MUST completely remove the ESP32-CAM from the custom car PCB before flashing. If you attempt to flash the code while the ESP32 is plugged into the car, the copper traces on the PCB will act as antennas, pick up electrical noise, and cause a `Packet content transfer stopped` fatal error. 
 > 
 > *Tip: Ensure your Arduino IDE upload speed is set to `115200` for the most stable data transfer.*
+
 ### 6. Drive!
 
 1. Power on the car.
 2. Open your smartphone or laptop Wi-Fi settings and connect to the car's open network (e.g., `BYU-Car-1`).
 3. Open a web browser and navigate to: `http://192.168.4.1/`
 4. Use the web dashboard to control the car and adjust camera settings.
+
+## Customizing the Dashboard (The UI Sandbox)
+
+If you want to customize the look of your car's driving dashboard (change colors, adjust button sizes, or add new controls), do **not** edit the C++ files directly right away!
+
+Inside this repository, you will find a folder called `web_interface` containing an `index.html` file. This is your **UI Sandbox**.
+
+1. Double-click `index.html` to open it in your web browser. 
+2. Open the file in any text editor (like VS Code or Notepad) and make your changes to the HTML, CSS, or JavaScript.
+3. Refresh your browser to see your changes instantly. 
+4. Once your new dashboard looks perfect, copy the entire contents of your customized `index.html` file.
+5. Open `esp32_cam/CameraWebServer/index.h` and carefully paste your new code inside the raw string literal to permanently flash it to the car.
 
 ## Architecture
 
