@@ -98,8 +98,40 @@ void turnLeft() {
 void startCameraServer();
 void setupLedFlash();
 
+// ===========================
+// WebSocket Client Lock
+// ===========================
+int activeClient = -1; // -1 means the car is currently available
+
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
-  if (type == WStype_TEXT) {
+  
+  // 1. Handle Disconnections
+  if (type == WStype_DISCONNECTED) {
+    if (activeClient == num) {
+      Serial.println("Driver disconnected. Car is now available.");
+      activeClient = -1; // Free up the lock for the next student
+      stopCar();         // SAFETY FEATURE: Hit the brakes if Wi-Fi drops!
+    }
+  } 
+  
+  // 2. Handle New Connections
+  else if (type == WStype_CONNECTED) {
+    if (activeClient == -1) {
+      activeClient = num; // Claim the lock
+      Serial.printf("Phone [%u] Connected! Car locked.\n", num);
+    } else {
+      Serial.printf("Phone [%u] rejected. Car is already in use.\n", num);
+      // Send an alert string to the rejected phone before dropping them
+      webSocket.sendTXT(num, "ERROR: Car is currently in use by another student.");
+      webSocket.disconnect(num); // Kick the intruder off the server
+    }
+  } 
+  
+  // 3. Handle Driving Commands
+  else if (type == WStype_TEXT) {
+    // SECURITY CHECK: Ignore commands from anyone who isn't the active driver
+    if (num != activeClient) return; 
+
     String command = String((char*)payload);
     Serial.print("Phone sent command: ");
     Serial.println(command);
@@ -227,7 +259,8 @@ void setup() {
 #endif
 
   // --- Open Access Point (No Password) ---
-  WiFi.softAP(carSSID, NULL); // Using NULL creates an open network
+  // Using NULL creates an open network. wifiChannel locks the broadcast frequency.
+  WiFi.softAP(carSSID, NULL, wifiChannel);
   Serial.println("");
   Serial.println("Car Wi-Fi Network Started!");
 
