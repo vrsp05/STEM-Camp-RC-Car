@@ -19,13 +19,6 @@ WebSocketsServer webSocket = WebSocketsServer(82);
 const char *carSSID = "SixSeven";
 
 // ===========================
-// Wi-Fi Channel Selection
-// Use ONLY channels 1, 6, or 11 to prevent cars from lagging each other.
-// Distribute evenly: e.g., Cars 1-3 on Ch 1, Cars 4-6 on Ch 6, Cars 7-10 on Ch 11.
-// ===========================
-const int wifiChannel = 1;
-
-// ===========================
 // Motor Driver Blueprint
 // ===========================
 struct MOTOR_PINS {
@@ -196,6 +189,11 @@ void setup() {
     config.fb_count = 1;
   }
 
+#if defined(CAMERA_MODEL_ESP_EYE)
+  pinMode(13, INPUT_PULLUP);
+  pinMode(14, INPUT_PULLUP);
+#endif
+
   // camera init
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
@@ -204,15 +202,35 @@ void setup() {
   }
 
   // Initialize motor pins as PWM speed outputs (1000 Hz, 8-bit resolution)
-  ledcAttach(rightMotor.pinIN1, 1000, 8);
-  ledcAttach(rightMotor.pinIN2, 1000, 8);
-  ledcAttach(leftMotor.pinIN1, 1000, 8);
-  ledcAttach(leftMotor.pinIN2, 1000, 8);
+  ledcAttach(rightMotor.pinIN1, 50, 8);
+  ledcAttach(rightMotor.pinIN2, 50, 8);
+  ledcAttach(leftMotor.pinIN1, 50, 8);
+  ledcAttach(leftMotor.pinIN2, 50, 8);
   
   // Ensure the car starts in a parked state
   stopCar();
 
   sensor_t *s = esp_camera_sensor_get();
+  
+if (s->id.PID == OV3660_PID) {
+    s->set_vflip(s, 1);        
+    
+    // 1. Brightness & Saturation
+    s->set_brightness(s, 0);   // Reset to 0. It is already overexposing, don't force it higher!
+    s->set_saturation(s, -2);  // Keep this low to suppress the red bleed
+    
+    // 2. White Balance
+    s->set_whitebal(s, 1);     // Auto White Balance ON
+    s->set_awb_gain(s, 1);     // AWB Gain ON
+    s->set_wb_mode(s, 0);      // Set back to Auto for now to let the DSP work
+
+    // 3. THE DEEP CALIBRATION (The Missing Pieces)
+    s->set_lenc(s, 1);         // Lens Correction ON (Fixes pink color fringing)
+    s->set_raw_gma(s, 1);      // Raw Gamma ON (Fixes the blown-out, overly bright exposure)
+    s->set_dcw(s, 1);          // Downsize Center Weight ON (Helps the camera meter light correctly)
+    s->set_bpc(s, 1);          // Black Pixel Correction ON
+    s->set_wpc(s, 1);          // White Pixel Correction ON
+  }
 
   // --- THE AUTO-PILOT TUNE ---
   s->set_exposure_ctrl(s, 1); // Auto-Exposure ON (adapts to shadows/sunlight)
@@ -220,6 +238,15 @@ void setup() {
   s->set_whitebal(s, 1);      // Auto-White Balance ON (removes weird color tints)
   s->set_awb_gain(s, 1);      // Auto-White Balance Gain ON
   s->set_wb_mode(s, 0);       // Set White Balance Mode to standard Auto
+
+#if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
+  s->set_vflip(s, 1);
+  s->set_hmirror(s, 1);
+#endif
+
+#if defined(CAMERA_MODEL_ESP32S3_EYE)
+  s->set_vflip(s, 1);
+#endif
 
 // Setup LED FLash if LED pin is defined in camera_pins.h
 #if defined(LED_GPIO_NUM)
