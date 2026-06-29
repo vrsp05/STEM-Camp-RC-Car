@@ -95,14 +95,23 @@
 
         function connectWebSocket() {
             ws = new WebSocket('ws://' + window.location.hostname + ':82/');
+            
             ws.onopen = function() {
                 statusText.innerText = "Car Connected & Ready!";
                 statusText.style.color = "green";
             };
+            
             ws.onclose = function() {
                 statusText.innerText = "Connection Lost. Reconnecting...";
                 statusText.style.color = "red";
                 setTimeout(connectWebSocket, 2000);
+            };
+
+            // Catch error messages sent from the ESP32 (e.g., Car already in use)
+            ws.onmessage = function(event) {
+                if (typeof event.data === "string" && event.data.startsWith("ERROR:")) {
+                    alert(event.data); // Pops up the error on the phone screen
+                }
             };
         }
         connectWebSocket();
