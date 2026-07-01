@@ -42,16 +42,16 @@ To build this car, you will need a mix of custom parts and standard robotics ele
 | **Rubber Wheels (for TT Motors)** | 4 | [Amazon](https://a.co/d/0djxPo1a) |
 | **T-Brackets** | 4 | [/3d_prints/](hardware/3d_prints/T-Bracket_Mount.stl) |
 | **Camera Mount** | 1 | [/3d_prints/](hardware/3d_prints/Camera_Mount.stl) |
-| **Headlight Mount** | 1 | [/3d_prints/](https://github.com/vrsp05/STEM-Camp-RC-Car/tree/main/hardware/3d_prints) |
+| **Headlight Mount** | 1 | [/3d_prints/](/hardware/3d_prints/) |
 | **6-32 x 1/4" Mounting Screws** | 8 | [Amazon](https://a.co/d/0h44JuEw) |
-| **Custom PCB Chassis** | 1 | [/electronics/](https://github.com/vrsp05/STEM-Camp-RC-Car/tree/main/hardware/electronics) |
+| **Custom PCB Chassis** | 1 | [/electronics/](/hardware/electronics/) |
 | **4-AA Battery Holder** | 1 | [DigiKey](https://www.digikey.com/short/vzvpw4tr) |
 | **Power Switch (SLW-1276864-4A-D)** | 1 | [DigiKey](https://www.digikey.com/short/3592nqjh) |
-| **AA Batteries** | 4 | [Amazon](https://www.digikey.com/short/3592nqjh) |
-| **Zip Tie** | 1 | [Amazon](https://www.digikey.com/short/3592nqjh) |
+| **AA Batteries** | 4 | [Amazon](https://a.co/d/0iRKMYl3) |
+| **Zip Tie** | 1 | [Amazon](https://a.co/d/0diwe9JH) |
 | **Small Foam / Cardboard Rectangle** | 1 | [Amazon](https://a.co/d/09obGXU5) |
 
-**Total estimated price:** $[Insert Total Here]
+**Total estimated price:** $50-$100
 
 ## The Instructions (How do I build it?)
 
@@ -83,29 +83,6 @@ Before doing anything, you need to save a copy of all these project files to you
 
    * **File:** [programming_guide.md](docs/programming_guide.md)
    * **What it does:** This guide teaches you how to open the code, give your car a unique Wi-Fi network name, and safely flash the firmware onto the ESP32-CAM using the correct settings so it is ready to drive.
-
-## Troubleshooting & Pro-Tips
-
-**1. The "Hidden" Upload Speed**
-If the Arduino IDE hides the "Upload Speed" option when you select the AI Thinker board, you can outsmart it! Change your board to **ESP32 Dev Module**. This generic profile unlocks the hidden menu. Set your Upload Speed to **115200**, change **PSRAM** to **Enabled**, and hit upload. This prevents the high-speed crashing issue.
-
-**2. The Antenna Effect (Flashing Crash)**
-If your upload crashes with an `exit status 2` error, your car's body is causing interference. You must completely remove the ESP32-CAM from the custom car PCB before flashing. If it is plugged in, the copper lines on the board act like antennas and scramble the data transfer. 
-
-**3. Motor Speeds**
-Not all yellow TT motors are created equal! If one of your cars is much faster than the others, check the motor colors. Dull yellow motors typically have a **1:48 gear ratio** (built for high speed). Brighter yellow motors often have a **1:120 gear ratio** (built for heavy pushing power). Always try to match the motor gear rations when building a car so it drives straight!
-
-**4. The Missing COM Port**
-If you connect your board but do not see a COM port listed, you are likely using a "charge-only" USB cable. Swap it out for a cable that supports data transfer to fix the issue.
-
-**5. The "Upload Fails" Timeout**
-If your upload hangs or fails to connect, ensure you have the "AI Thinker ESP32-CAM" selected as your board. If it still fails, you can physically force the connection by pressing and holding the **I0O** button on your programmer board while the code is uploading.
-
-**6. Camera Not Working (Blank Screen)**
-If the dashboard loads but you have no video, first verify that the tiny OV2640 camera ribbon is snapped completely into its connector. Second, ensure there is absolutely no MicroSD card inserted into the board.
-
-**7. Video Freezing or Losing Control**
-If the video feed suddenly stops or the car stops responding to your controls, you have likely driven out of the ESP32's Wi-Fi range. Walk closer to the car, turn your device's Wi-Fi off and back on to reconnect, and refresh the web page.
 
 ## Credits
 
