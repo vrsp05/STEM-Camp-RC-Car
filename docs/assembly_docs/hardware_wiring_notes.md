@@ -22,3 +22,12 @@ When you build a 4-wheel drive car, you have front motors and back motors. Becau
 * Your **Back** motors (M2 & M4) must have the **Black** wire on the + pin and the **Red** wire on the - pin. 
 
 Always double-check your motor wiring before you screw the chassis completely together!
+
+## Hardware Quirks: Motor Speeds
+
+Not all yellow TT motors are created equal! If one of your cars is much faster than the others, check the motor colors. 
+
+* **Dull Yellow Motors:** These typically have a **1:48 gear ratio**. They are built for high speed. 
+* **Bright Yellow Motors:** These typically have a **1:120 gear ratio**. They are built for heavy pushing power and will drive much slower. 
+
+Always try to match the exact same motor colors when building a single car. If you mix a dull yellow motor with a bright yellow motor, your car will constantly pull to one side and will not drive straight!

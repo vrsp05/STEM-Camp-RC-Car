@@ -16,7 +16,7 @@ WebSocketsServer webSocket = WebSocketsServer(82);
 // Hardcoded Factory Credentials
 // Change this number for each car before flashing! (e.g., BYU-Car-2, BYU-Car-3)
 // ===========================
-const char *carSSID = "byucar2";
+const char *carSSID = "BYU-Car-0";
 
 // ===========================
 // Wi-Fi Channel Selection
