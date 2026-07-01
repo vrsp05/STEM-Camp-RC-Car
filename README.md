@@ -13,20 +13,20 @@ Built by Victor Santana, Jaime Mejia, and Dan Barry as a proposed 2026 workshop 
 
 ## The Map (How is it organized?)
 
-To make building your car as easy as possible, we separated all the files into four specific folders:
+The repository is organized into four top-level folders to separate documentation, firmware, physical parts, and the web dashboard:
 
 ```text
 STEM-CAMP-RC-CAR/
-├── docs/             
-├── firmware/         
-├── hardware/         
-└── web_interface/
+├── docs/              # user guides, lesson plans, and troubleshooting
+├── firmware/          # ESP32/Arduino source code, configs, and builds
+├── hardware/          # 3D-print STL, PCB files, schematics, and BOM
+└── web_interface/     # dashboard UI (HTML/CSS/JS) and client assets
 ```
 
-- **docs/** (The Instruction Manuals): This is the library. It holds all the step-by-step guides that show you exactly how to snap the car together and set up the computer.
-- **firmware/** (The Car's Brain): This is where the code lives. When we upload this folder to the microcontroller, it teaches the car how to drive, how to connect to Wi-Fi, and how to stream the video camera.
-- **hardware/** (The Physical Parts): This is the toolbox. It holds the 3D-printer files needed to make the plastic car body, the printed circuit board (PCB), and the wiring diagrams that show where all the electronics plug in.
-- **web_interface/** (The Remote Control): This is the steering wheel. It holds the files that will pop up on a phone screen so you can actually see the video and drive the car.
+- **docs/**: Step‑by‑step manuals, programming guides, setup instructions, classroom materials, and troubleshooting notes to build and operate the car.
+- **firmware/**: All source code and build artifacts for the ESP32 firmware (sketches, header/config files, build scripts, and CI files). Flashable binaries and board configuration live here.
+- **hardware/**: CAD and STL files for 3D printing, PCB design and Gerber/board files, circuit schematics, wiring diagrams, and the bill of materials (BOM).
+- **web_interface/**: The mobile‑friendly dashboard — HTML, CSS, JavaScript, assets, and client‑side WebSocket code used to view live video and control the car from a browser or phone.
 
 ## The Shopping List (Hardware Requirements)
 
