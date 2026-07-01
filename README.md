@@ -42,16 +42,16 @@ To build this car, you will need a mix of custom parts and standard robotics ele
 | **Rubber Wheels (for TT Motors)** | 4 | [Amazon](https://a.co/d/0djxPo1a) |
 | **T-Brackets** | 4 | [/3d_prints/](hardware/3d_prints/T-Bracket_Mount.stl) |
 | **Camera Mount** | 1 | [/3d_prints/](hardware/3d_prints/Camera_Mount.stl) |
-| **Headlight Mount** | 1 | [/3d_prints/](https://github.com/vrsp05/STEM-Camp-RC-Car/tree/main/hardware/3d_prints) |
+| **Headlight Mount** | 1 | [/3d_prints/](/hardware/3d_prints/) |
 | **6-32 x 1/4" Mounting Screws** | 8 | [Amazon](https://a.co/d/0h44JuEw) |
-| **Custom PCB Chassis** | 1 | [/electronics/](https://github.com/vrsp05/STEM-Camp-RC-Car/tree/main/hardware/electronics) |
+| **Custom PCB Chassis** | 1 | [/electronics/](/hardware/electronics/) |
 | **4-AA Battery Holder** | 1 | [DigiKey](https://www.digikey.com/short/vzvpw4tr) |
 | **Power Switch (SLW-1276864-4A-D)** | 1 | [DigiKey](https://www.digikey.com/short/3592nqjh) |
-| **AA Batteries** | 4 | [Amazon](https://www.digikey.com/short/3592nqjh) |
-| **Zip Tie** | 1 | [Amazon](https://www.digikey.com/short/3592nqjh) |
+| **AA Batteries** | 4 | [Amazon](https://a.co/d/0iRKMYl3) |
+| **Zip Tie** | 1 | [Amazon](https://a.co/d/0diwe9JH) |
 | **Small Foam / Cardboard Rectangle** | 1 | [Amazon](https://a.co/d/09obGXU5) |
 
-**Total estimated price:** $[Insert Total Here]
+**Total estimated price:** $50-$100
 
 ## The Instructions (How do I build it?)
 
