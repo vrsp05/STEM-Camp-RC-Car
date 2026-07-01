@@ -1,124 +1,111 @@
-# BYU STEM Camp RC Car (ESP32-CAM)
+# BYU STEM Camp RC Car
 
-A robust, low-cost, and low-latency RC car software framework designed for educational STEM camps. This project turns a standard ESP32-CAM into a standalone web server, video streamer, and motor controller, all without requiring an external internet connection.
+## About This Project
+
+Built by Victor Santana, Jaime Mejia, and Dan Barry as a proposed 2026 workshop for the BYU STEM Camp, this project delivers a robust, low-cost, and low-latency RC car framework. It transforms a standard ESP32-CAM into a standalone web server, video streamer, and motor controller, all without requiring an external internet connection. This interactive experience is designed to inspire students and provide hands-on learning in embedded systems, IoT technology, microcontrollers, and real-time wireless networking.
 
 ## Features
 
-- **Low-Latency Video:** Optimized firmware utilizing CIF (400x296) resolution and an adjusted 10MHz clock speed for rock-solid MJPEG streaming over a local network.
-- **WebSocket Nervous System:** Sub-millisecond response times for driving controls and camera tuning.
-- **Frictionless Connectivity:** Auto-broadcasting, password-free Wi-Fi Access Points (e.g., `BYU-Car-1`). Students connect and drive instantly.
-- **On-the-Fly Tuning:** A sleek, mobile-friendly web dashboard featuring a D-Pad and live sliders to control Headlight brightness, Camera Contrast, and Exposure.
+* **Low-Latency Video:** Optimized firmware utilizing CIF (400x296) resolution and an adjusted 10MHz clock speed for good MJPEG streaming over a local network.
+* **WebSocket System:** Fast response times for driving controls and camera tuning, ensuring the car reacts to your steering instantly.
+* **Frictionless Connectivity:** Auto-broadcasting, password-free Wi-Fi Access Points (e.g., `BYU-Car-1`). Students connect and drive instantly.
+* **On-the-Fly Tuning:** A sleek, mobile-friendly web dashboard featuring a D-Pad and live sliders to control Headlight brightness, Camera Contrast, and Exposure.
 
-## Hardware Requirements
+## The Map (How is it organized?)
 
-- **Microcontroller:** ESP32-CAM with OV2640 sensor (recommended). OV3660 is compatible but may not perform as well. [[Link](https://www.aliexpress.us/item/3256806346200289.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en3256806346200289&ds_e_product_merchant_id=5352158365&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V101Z4Zg7qYjB7jEohQEXXXkJtaJuUl7Fb8nahwqdjlZUxWY4VXrlRoCbLwQAvD_BwE&gatewayAdapt=glo2usa)]
-- **Motors:** Four TT DC gearbox motors with retractable design for easy suitcase storage. [[Link](https://www.aliexpress.us/item/3256809725271346.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en3256809725271346&ds_e_product_merchant_id=5640842084&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V23h5dibXUOXUa0smJ8FFr1nYl_yUjkY2SpRhDMMLlLAYPJRrs-16hoCsjcQAvD_BwE&gatewayAdapt=glo2usa)]
-- **Wheels:** Four compatible TT motor rubber wheels. [[Link](https://www.aliexpress.us/item/3256809725271346.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en3256809725271346&ds_e_product_merchant_id=5640842084&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V23h5dibXUOXUa0smJ8FFr1nYl_yUjkY2SpRhDMMLlLAYPJRrs-16hoCsjcQAvD_BwE&gatewayAdapt=glo2usa)]
-- **Motor Driver:** DRV8833. [[Link](https://www.aliexpress.us/item/3256808512860623.html?src=google&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en3256808512860623&ds_e_product_merchant_id=5560538802&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=19558607238&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=19566915268&gbraid=0AAAAAD6I-hHcVpRLmtsNOLYqdC36jl_6Q&gclid=CjwKCAjwuanRBhBSEiwAY5y6VxsEeO_oh6zBLbQ3QillTrRul9A80BLu5ZrUFSNyDJvnp-FDlmZOYBoCc3YQAvD_BwE&gatewayAdapt=glo2usa)]
-- **Chassis:** Custom PCB. [[Link]()]
-- **Power Supply:** 4 AA battery pack [[Link](https://www.aliexpress.us/item/2255799895517935.html?src=google&snps=y&src=google&albch=shopping&acnt=708-803-3821&isdl=y&slnk=&plac=&mtctp=&albbt=Google_7_shopping&aff_platform=google&aff_short_key=UneMJZVf&gclsrc=aw.ds&albagn=888888&ds_e_adid=&ds_e_matchtype=&ds_e_device=c&ds_e_network=x&ds_e_product_group_id=&ds_e_product_id=en2255799895517935&ds_e_product_merchant_id=109204739&ds_e_product_country=US&ds_e_product_language=en&ds_e_product_channel=online&ds_e_product_store_id=&ds_url_v=2&albcp=20542171667&albag=&isSmbAutoCall=false&needSmbHouyi=false&gad_source=1&gad_campaignid=18545443176&gbraid=0AAAAAD6I-hHSnJe8F4dPsfukiDXsjnCPU&gclid=CjwKCAjwuanRBhBSEiwAY5y6V6zV6XEK94hojw_-oD1P6xNap2T9IkF80AHEtQx7qn7wH8S5d1uNaBoC5PEQAvD_BwE&gatewayAdapt=glo2usa)]. *(Note: You will need to provide 4 of your own good quality AA batteries).*
-- **Power Switch:** SLW-1276864-4A-D switch for car control. [[Link](https://www.digikey.com/en/products/detail/same-sky-formerly-cui-devices-/SLW-1276864-4A-D/21259972?gclsrc=aw.ds&gad_source=1&gad_campaignid=20243136172&gbraid=0AAAAADrbLlj1fOpVS-J9OCclJDTSNeTLj&gclid=CjwKCAjwuanRBhBSEiwAY5y6V0a4BwxcfrwDMveePxhBp6Lb_C-T54p6c8k-7GsEpx2MxBAeGH0KEhoCDD4QAvD_BwE)]
+The repository is organized into four top-level folders to separate documentation, firmware, physical parts, and the web dashboard:
 
-*Note: Do not power the motors directly from the ESP32!*
+```text
+STEM-CAMP-RC-CAR/
+├── docs/              # user guides, lesson plans, and troubleshooting
+├── firmware/          # ESP32/Arduino source code, configs, and builds
+├── hardware/          # 3D-print STL, PCB files, schematics, and BOM
+└── web_interface/     # dashboard UI (HTML/CSS/JS) and client assets
+```
 
-## Wiring Guide (Custom PCB Reference)
+- **docs/**: Step‑by‑step manuals, programming guides, setup instructions, classroom materials, and troubleshooting notes to build and operate the car.
+- **firmware/**: All source code and build artifacts for the ESP32 firmware (sketches, header/config files, build scripts, and CI files). Flashable binaries and board configuration live here.
+- **hardware/**: CAD and STL files for 3D printing, PCB design and Gerber/board files, circuit schematics, wiring diagrams, and the bill of materials (BOM).
+- **web_interface/**: The mobile‑friendly dashboard — HTML, CSS, JavaScript, assets, and client‑side WebSocket code used to view live video and control the car from a browser or phone.
 
-The following is the internal wiring reference for the Custom PCB, connecting the ESP32-CAM to the onboard DRV8833 motor driver. 
+## The Shopping List (Hardware Requirements)
 
-| ESP32-CAM Pin | DRV8833 Pin | Function |
+To build this car, you will need a mix of custom parts and standard robotics electronics. Here is the detailed breakdown:
+
+| Component | Quantity | Purchase Link |
 | :--- | :--- | :--- |
-| `GPIO 13` | `IN1` | Right Motors (M3 & M4) PWM |
-| `GPIO 12` | `IN2` | Right Motors (M3 & M4) PWM |
-| `GPIO 15` | `IN3` | Left Motors (M1 & M2) PWM |
-| `GPIO 14` | `IN4` | Left Motors (M1 & M2) PWM |
-| `5V` | `VCC` | Power to ESP32 |
-| `GND` | `GND` | Common Ground |
+| **ESP32-CAM (OV2640 camera)** | 1 | [DigiKey](https://www.digikey.com/short/w14d0qp4) |
+| **DRV8833 Motor Controller** | 1 | [Amazon](https://a.co/d/00hcKW4g) |
+| **8-Pin Female-to-Male Headers** | 2 | [DigiKey](https://www.digikey.com/short/5r3mm5rb) |
+| **6-Pin Male-to-Male Headers** | 1 | [DigiKey](https://www.digikey.com/short/bth0dmv4) |
+| **TT DC Gearbox Motors** | 4 | [Amazon](https://a.co/d/0djxPo1a) |
+| **Rubber Wheels (for TT Motors)** | 4 | [Amazon](https://a.co/d/0djxPo1a) |
+| **T-Brackets** | 4 | [/3d_prints/](hardware/3d_prints/T-Bracket_Mount.stl) |
+| **Camera Mount** | 1 | [/3d_prints/](hardware/3d_prints/Camera_Mount.stl) |
+| **Headlight Mount** | 1 | [/3d_prints/](https://github.com/vrsp05/STEM-Camp-RC-Car/tree/main/hardware/3d_prints) |
+| **6-32 x 1/4" Mounting Screws** | 8 | [Amazon](https://a.co/d/0h44JuEw) |
+| **Custom PCB Chassis** | 1 | [/electronics/](https://github.com/vrsp05/STEM-Camp-RC-Car/tree/main/hardware/electronics) |
+| **4-AA Battery Holder** | 1 | [DigiKey](https://www.digikey.com/short/vzvpw4tr) |
+| **Power Switch (SLW-1276864-4A-D)** | 1 | [DigiKey](https://www.digikey.com/short/3592nqjh) |
+| **AA Batteries** | 4 | [Amazon](https://www.digikey.com/short/3592nqjh) |
+| **Zip Tie** | 1 | [Amazon](https://www.digikey.com/short/3592nqjh) |
+| **Small Foam / Cardboard Rectangle** | 1 | [Amazon](https://a.co/d/09obGXU5) |
 
-*Note: Ensure no MicroSD card is inserted, as the motors utilize the SD card data pins. The left motor logic (Pins 14 & 15) is intentionally inverted in the software to account for the physical motor orientation.*
+**Total estimated price:** $[Insert Total Here]
 
-### Crucial Assembly Warning: The "Mirror Effect"
+## The Instructions (How do I build it?)
 
-When assembling the chassis, be aware that the front and back motors on each side (e.g., M1 and M2) share the exact same electrical channel on the custom PCB. They will always receive the exact same "forward" or "backward" signal from the code. 
+To build, program, and drive your car, you just need to download this repository and follow the step-by-step guides. You do not need to figure out how to build it from scratch, everything is already mapped out for you:
 
-However, because the back motors are physically mounted facing the opposite direction of the front motors on standard TT chassis kits, sending a "forward" signal will cause the back wheels to mechanically spin backward. The car will fight itself and refuse to drive.
+**Step 1: Download the Files (Fork and Clone)**
 
-**To fix this, you must do ONE of the following to the two BACK motors (M2 and M4) before testing:**
-* **Option A (Recommended):** Unclip the back motors from the plastic chassis, physically flip them upside down (180 degrees), and clip them back in. This reverses their mechanical rotation to match the front wheels.
-* **Option B (If motors cannot be removed):** Desolder and swap the two wires directly at the copper tabs on the motor casing itself. This reverses their electrical polarity to bypass the PCB's parallel wiring.
+Before doing anything, you need to save a copy of all these project files to your own computer.
 
-## Setup & Installation
+   * Click the **Fork** button at the top right of this GitHub page. This creates a safe copy in your own account so you can make changes without breaking the original project.
+   * Open your computer's terminal and clone your new copy by typing:
+      ```bash
+      git clone https://github.com/vrsp05/STEM-Camp-RC-Car.git
 
-### 1. Fork and Clone the Repository
+      cd STEM-Camp-RC-Car
+      ```
 
-1. **Fork the repository** by clicking the "Fork" button on GitHub (top-right corner).
-   - This creates your own copy of the project, so you won't accidentally modify the original repository.
+**Step 2: Set Up Your Computer**
 
-2. **Clone your forked repository** to your local machine:
+   * **File:** [environment_setup.md](docs/environment_setup.md)
+   * **What it does:** This guide shows you exactly how to install the Arduino IDE on your computer, add the ESP32 chip definitions, and make sure your computer can talk to the car's brain over a USB cable.
 
-```bash
-git clone https://github.com/vrsp05/STEM-Camp-RC-Car.git
-cd STEM-Camp-RC-Car
-```
+**Step 3: Assemble the Hardware**
 
-### 2. Set Up Arduino IDE
+   * **File:** [assembly_guide.pdf](docs/assembly_guide.pdf)
+   * **What it does:** This is your physical instruction manual. It has clear pictures and step-by-step directions showing you how to solder the electronics to the custom PCB chassis, mount the four yellow gearbox motors using your screws, and attach the wheels.
 
-Configure your Arduino IDE to support the ESP32-CAM board and install the necessary libraries. Follow the detailed guide:
+**Step 4: Program the Brain**
 
-**[Complete Arduino IDE Setup Guide →](ARDUINO_IDE_ESP32_SETUP.md)**
+   * **File:** [programming_guide.md](docs/programming_guide.md)
+   * **What it does:** This guide teaches you how to open the code, give your car a unique Wi-Fi network name, and safely flash the firmware onto the ESP32-CAM using the correct settings so it is ready to drive.
 
-This includes:
-- Installing the latest ESP32 libraries by Espressif via Boards Manager
-- Selecting the correct board (AI Thinker ESP32-CAM)
-- Selecting the correct COM port
-- Troubleshooting common issues
+## Troubleshooting & Pro-Tips
 
-### 3. Connect Your ESP32-CAM to Your Computer
+**1. The "Hidden" Upload Speed**
+If the Arduino IDE hides the "Upload Speed" option when you select the AI Thinker board, you can outsmart it! Change your board to **ESP32 Dev Module**. This generic profile unlocks the hidden menu. Set your Upload Speed to **115200**, change **PSRAM** to **Enabled**, and hit upload. This prevents the high-speed crashing issue.
 
-1. Connect your ESP32-CAM to your computer using the USB cable connected to the MB board or an FTDI programmer.
-2. Open the Arduino IDE and ensure the correct COM port is selected (**Tools → Port**).
+**2. The Antenna Effect (Flashing Crash)**
+If your upload crashes with an `exit status 2` error, your car's body is causing interference. You must completely remove the ESP32-CAM from the custom car PCB before flashing. If it is plugged in, the copper lines on the board act like antennas and scramble the data transfer. 
 
-### 4. Configure the Car's Name
+**3. Motor Speeds**
+Not all yellow TT motors are created equal! If one of your cars is much faster than the others, check the motor colors. Dull yellow motors typically have a **1:48 gear ratio** (built for high speed). Brighter yellow motors often have a **1:120 gear ratio** (built for heavy pushing power). Always try to match the motor gear rations when building a car so it drives straight!
 
-1. In the Arduino IDE, open the `CameraWebServer.ino` file from the `esp32_cam/CameraWebServer/` directory.
-2. Locate this line near the top of the file and change it to your car's designated name (e.g., `BYU-Car-2`):
+**4. The Missing COM Port**
+If you connect your board but do not see a COM port listed, you are likely using a "charge-only" USB cable. Swap it out for a cable that supports data transfer to fix the issue.
 
-```cpp
-const char *carSSID = "BYU-Car-1";
-```
+**5. The "Upload Fails" Timeout**
+If your upload hangs or fails to connect, ensure you have the "AI Thinker ESP32-CAM" selected as your board. If it still fails, you can physically force the connection by pressing and holding the **I0O** button on your programmer board while the code is uploading.
 
-### 5. Flash the Firmware
+**6. Camera Not Working (Blank Screen)**
+If the dashboard loads but you have no video, first verify that the tiny OV2640 camera ribbon is snapped completely into its connector. Second, ensure there is absolutely no MicroSD card inserted into the board.
 
-1. In the Arduino IDE, click **Sketch → Upload** (or press `Ctrl+U` / `Cmd+U`).
-2. Wait for the upload to complete. You should see "Done uploading" in the console.
-3. Once complete, the MB board is no longer needed (you can disconnect it).
-4. Upon successful boot, the onboard LED will flash three times to indicate the board was successfully flashed.
-
-> ** Crucial Flashing Warning: ** > You MUST completely remove the ESP32-CAM from the custom car PCB before flashing. If you attempt to flash the code while the ESP32 is plugged into the car, the copper traces on the PCB will act as antennas, pick up electrical noise, and cause a `Packet content transfer stopped` fatal error. 
-> 
-> *Tip: Ensure your Arduino IDE upload speed is set to `115200` for the most stable data transfer.*
-
-### 6. Drive!
-
-1. Power on the car.
-2. Open your smartphone or laptop Wi-Fi settings and connect to the car's open network (e.g., `BYU-Car-1`).
-3. Open a web browser and navigate to: `http://192.168.4.1/`
-4. Use the web dashboard to control the car and adjust camera settings.
-
-## Customizing the Dashboard (The UI Sandbox)
-
-If you want to customize the look of your car's driving dashboard (change colors, adjust button sizes, or add new controls), do **not** edit the C++ files directly right away!
-
-Inside this repository, you will find a folder called `web_interface` containing an `index.html` file. This is your **UI Sandbox**.
-
-1. Double-click `index.html` to open it in your web browser. 
-2. Open the file in any text editor (like VS Code or Notepad) and make your changes to the HTML, CSS, or JavaScript.
-3. Refresh your browser to see your changes instantly. 
-4. Once your new dashboard looks perfect, copy the entire contents of your customized `index.html` file.
-5. Open `esp32_cam/CameraWebServer/index.h` and carefully paste your new code inside the raw string literal to permanently flash it to the car.
-
-## Architecture
-
-This project was built to scale for classroom environments. By utilizing hardcoded unique SSIDs and isolating each car as its own Access Point, dozens of cars can be operated in the same room without IP routing conflicts.
+**7. Video Freezing or Losing Control**
+If the video feed suddenly stops or the car stops responding to your controls, you have likely driven out of the ESP32's Wi-Fi range. Walk closer to the car, turn your device's Wi-Fi off and back on to reconnect, and refresh the web page.
 
 ## Credits
 
@@ -131,12 +118,6 @@ This project builds upon excellent educational resources from the community:
 - [Simple Circuits Tutorial](https://www.youtube.com/watch?v=Du1UvHnD-ZM) by Simple Circuits
 - [ESP32-CAM Car Robot Web Server](https://randomnerdtutorials.com/esp32-cam-car-robot-web-server/) by Random Nerd Tutorials
 - [RoboArmy Project](https://youtu.be/YqQc_Sm9vlA) by RoboArmy
-
-## About This Project
-
-This is a demonstration project built by Victor Santana, Jaime Mejia, and Dan Barry for the BYU STEM Camp (2026). It showcases how embedded systems and IoT technology can be integrated into a fun, interactive workshop experience. The goal is to provide students with hands-on experience building and controlling robot cars, while learning about microcontrollers, wireless networking, web servers, and real-time systems.
-
-This project is proposed as a potential new workshop offering for the BYU STEM Camp to enhance the educational experience and inspire students interested in robotics and embedded systems.
 
 ---
 
