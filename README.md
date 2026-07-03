@@ -43,7 +43,7 @@ To build this car, you will need a mix of custom parts and standard robotics ele
 | **T-Brackets** | 4 | [/3d_prints/](hardware/3d_prints/T-Bracket_Mount.stl) |
 | **Camera Mount** | 1 | [/3d_prints/](hardware/3d_prints/Camera_Mount.stl) |
 | **Headlight Mount** | 1 | [/3d_prints/](/hardware/3d_prints/) |
-| **6-32 x 1/4" Mounting Screws** | 8 | [Amazon](https://a.co/d/0h44JuEw) |
+| **6-32 x 1/4" Mounting Screws** | 8 | [Amazon](https://a.co/d/0eqBX8dm) |
 | **Custom PCB Chassis** | 1 | [/electronics/](/hardware/electronics/) |
 | **4-AA Battery Holder** | 1 | [DigiKey](https://www.digikey.com/short/vzvpw4tr) |
 | **Power Switch (SLW-1276864-4A-D)** | 1 | [DigiKey](https://www.digikey.com/short/3592nqjh) |
@@ -51,7 +51,7 @@ To build this car, you will need a mix of custom parts and standard robotics ele
 | **Zip Tie** | 1 | [Amazon](https://a.co/d/0diwe9JH) |
 | **Small Foam / Cardboard Rectangle** | 1 | [Amazon](https://a.co/d/09obGXU5) |
 
-**Total estimated price:** $50-$100
+**Total estimated price:** $50-$80
 
 ## The Instructions (How do I build it?)
 
