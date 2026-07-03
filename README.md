@@ -51,7 +51,7 @@ To build this car, you will need a mix of custom parts and standard robotics ele
 | **Zip Tie** | 1 | [Amazon](https://a.co/d/0diwe9JH) |
 | **Small Foam / Cardboard Rectangle** | 1 | [Amazon](https://a.co/d/09obGXU5) |
 
-**Total estimated price:** $50-$100
+**Total estimated price:** $50-$80
 
 ## The Instructions (How do I build it?)
 
