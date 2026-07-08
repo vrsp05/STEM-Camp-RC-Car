@@ -71,17 +71,17 @@ Before doing anything, you need to save a copy of all these project files to you
 
 **Step 2: Set Up Your Computer**
 
-   * **File:** [environment_setup.md](docs/environment_setup.md)
+   * **File:** [environment_setup.md](/docs/environment/environment_setup.md)
    * **What it does:** This guide shows you exactly how to install the Arduino IDE on your computer, add the ESP32 chip definitions, and make sure your computer can talk to the car's brain over a USB cable.
 
 **Step 3: Assemble the Hardware**
 
-   * **File:** [assembly_guide.pdf](docs/assembly_guide.pdf)
+   * **File:** [assembly_guide.pdf](/docs/assembly_docs/assembly_guide.pdf)
    * **What it does:** This is your physical instruction manual. It has clear pictures and step-by-step directions showing you how to solder the electronics to the custom PCB chassis, mount the four yellow gearbox motors using your screws, and attach the wheels.
 
 **Step 4: Program the Brain**
 
-   * **File:** [programming_guide.md](docs/programming_guide.md)
+   * **File:** [programming_guide.md](/docs/programming/programming_instructions.md)
    * **What it does:** This guide teaches you how to open the code, give your car a unique Wi-Fi network name, and safely flash the firmware onto the ESP32-CAM using the correct settings so it is ready to drive.
 
 ## Credits
