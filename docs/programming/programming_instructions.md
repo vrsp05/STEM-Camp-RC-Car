@@ -74,7 +74,7 @@ Once the dashboard loads, you will have full control over the car's hardware. He
 
 The best part of engineering is breaking things and making them your own. If you want to see exactly how this code works or start modifying the dashboard and motor controls yourself, you can find the complete source code online.
 
-Go to the [firmware/rc_car_main](/firmware/rc_car_main/) folder to view the code. Be sure to fork the repository to your own account so you can start making your own changes and improvements!
+Go to the [firmware/rc_car_main](/firmware/rc_car_main/rc_car_main.ino) folder to view the code. Be sure to fork the repository to your own account so you can start making your own changes and improvements!
 
 ## Troubleshooting & Pro-Tips
 
