@@ -1,8 +1,8 @@
 # BYU STEM Camp RC Car: Programming Guide
 
-Welcome to the final step of your RC Car build! Right now, your car is just plastic, motors, and wires. In this guide, we are going to give it a brain.
+Welcome to the final step of your RC Car build. Right now, your car is just plastic, motors, and wires. In this guide, we are going to give it a brain.
 
-The tiny computer on your car (called the ESP32-CAM) is incredibly special. It does not just hold code, it actually creates its very own invisible Wi-Fi network! 
+The tiny computer on your car (called the ESP32-CAM) is incredibly special. It does not just hold code, it actually creates its very own Wi-Fi network! 
 
 Here is how the magic works:
 1. **The Code:** We will upload a file that teaches the brain how to drive.
@@ -15,9 +15,9 @@ Let's get your car programmed and ready to race!
 
 ### 1. Name Your Car & Pick a Wi-Fi Channel
 
-Before we put the brain into the car, we need to give it a unique identity. If all the cars in the room have the exact same Wi-Fi name, your phone will not know which one is yours, and you might accidentally connect to your friend's car! 
+Before we put the brain into the car, we need to give it a unique identity. If all the cars in the room have the exact same Wi-Fi name, your phone will not know which one is yours, and you might accidentally connect to your friend's car.
 
-We also need to pick a Wi-Fi **Channel**. Think of a channel like a lane on an invisible highway. If every single car in the camp tries to drive in the exact same lane, there will be a massive traffic jam and your live video will freeze. 
+We also need to pick a Wi-Fi **Channel**. Think of a channel like a lane on an invisible highway. If every single car in the camp tries to drive in the exact same lane, there will be a massive traffic jam and your live video may freeze. 
 
 Here is exactly how to change your car's name and pick your highway lane in the code:
 
@@ -27,7 +27,7 @@ Here is exactly how to change your car's name and pick your highway lane in the 
 3. **Change the Name:** Delete the words inside the quotation marks and type in your own custom name (for example: `"BYU-Car-1"` or `"Lightning"`). *Warning: Make sure you do not delete the quotation marks!*
 4. **Find the Channel:** Right below your name, look for the line that sets the Wi-Fi channel. It will look something like this:
    `const int wifiChannel = 1;`
-5. **Pick Your Lane:** Change that number to **1**, **6**, or **11**. These three numbers are the best "fast lanes" for Wi-Fi. *(Pro-Tip: Ask the students sitting next to you which number they picked, and try to choose a different one so your cars do not share the same lane!)*
+5. **Pick Your Lane:** Change that number to **1**, **6**, or **11**. These three numbers are the best "fast lanes" for Wi-Fi. *(Pro-Tip: Ask other next to you which number they picked, and try to choose a different one so your cars do not share the same lane.)*
 
 ### 2. Flash the Firmware (Upload the Brain)
 
@@ -39,18 +39,18 @@ Now that you have chosen a name and a lane, it is time to transfer the code from
 4. **Pick the Right Cable:** Click on **Tools > Port** and select the COM port that shows up (this tells the computer which USB plug you are using).
 5. **Click Upload:** Click the round **Right Arrow (Upload)** button at the top left of your screen. 
 
-Watch the black box at the bottom of the screen. When the text stops moving and it says **"Done Uploading,"** your car's brain is officially programmed!
+Watch the black box at the bottom of the screen. When the text stops moving and it says **"Done Uploading"** (or something similar), your car's brain is officially programmed.
 
 ### 3. Power On and Connect (Wake Up the Car)
 
 Now that the brain is programmed, it is time to cut the cord and let the car wake up on its own!
 
-1. **Unplug the Cable:** Carefully unplug the USB cable from the car's brain. You don't need the computer anymore! Now plug the ESP32 back into the car.
+1. **Unplug the Cable:** Carefully unplug the USB cable from the car's brain. You don't need the computer anymore. Now plug the ESP32 back into the car.
 2. **Turn on the Batteries:** Make sure you have 4 AA batteries in the holder, and flip the main power switch on the car to the **ON** position. 
 3. **Find Your Network:** Open the Wi-Fi settings on your smartphone (or a tablet).
 4. **Connect to Your Car:** Look at the list of Wi-Fi networks and tap on the custom name you created in Step 1 (like "BYU-Car-1"). 
 
-*Note: Your car's network does not have a password, so it will connect instantly. Your phone might pop up a warning saying "No Internet Connection." Do not worry—that is exactly what is supposed to happen because your car is not a normal Wi-Fi router!*
+*Note: Your car's network does not have a password, so it will connect instantly. Your phone might pop up a warning saying "No Internet Connection." Do not worry—that is exactly what is supposed to happen because your car is not a normal Wi-Fi router.*
 
 ### 4. Launch the Dashboard (Take the Wheel)
 
@@ -58,7 +58,7 @@ You are connected! Now it is time to open your digital steering wheel and see th
 
 1. **Open a Browser:** Open a web browser on your phone or computer (like Safari, Chrome, or Edge).
 2. **Type the Secret Address:** Tap on the search bar at the very top of your screen, type in exactly **192.168.4.1**, and hit Enter. 
-3. **Start Driving:** The screen will load your custom dashboard! You should immediately see a live video feed from the front of your car. Use the D-pad buttons to steer, and play with the sliders to turn on your headlights!
+3. **Start Driving:** The screen will load your custom dashboard. You should immediately see a live video feed from the front of your car. Use the D-pad buttons to steer, and play with the sliders to turn on your headlights!
 
 ## Using the Web Interface
 
@@ -88,7 +88,7 @@ Go to the [firmware/rc_car_main](/firmware/rc_car_main/) folder to view the code
 ### 2. Video & Camera Issues
 
 * **Camera Not Working (Blank Screen):** If the dashboard loads but you have no video, first verify that the tiny OV2640 camera ribbon is snapped completely into its connector. Second, ensure there is absolutely no MicroSD card inserted into the board.
-* **Hardware Warning (The "Blind Car"):** Sometimes, cheap or low-quality ESP32-CAM boards will connect and drive perfectly, but the video will just refuse to show up no matter what you do. To prevent this, we highly recommend buying your ESP32-CAM boards from trusted, high-quality manufacturers!
+* **Hardware Warning (The "Blind Car"):** Sometimes, cheap or low-quality ESP32-CAM boards will connect and drive perfectly, but the video will just refuse to show up no matter what you do. To prevent this, we highly recommend buying your ESP32-CAM boards from trusted, high-quality manufacturers.
 
 ### 3. Wi-Fi & Driving Connection (Phone to Car)
 
