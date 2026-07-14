@@ -1,6 +1,6 @@
 # Hardware & Wiring Notes
 
-If you are building the car using the custom STEM Camp PCB, this guide explains exactly how the electronics connect and the number one physical mistake to avoid when building your drivetrain!
+If you are building the car using the custom STEM Camp PCB, this guide explains exactly how the electronics connect and the number one physical mistake to avoid when building your drivetrain.
 
 ## Wiring Guide
 
@@ -14,7 +14,7 @@ The custom PCB handles all the complicated power routing for you, but it is help
 
 When you build a 4-wheel drive car, you have front motors and back motors. Because of how they fit into the plastic frame, the front and back motors are physically facing opposite directions. They are "mirrored."
 
-**The Problem:** If you solder the wires to the front motors and the back motors exactly the same way, the front wheels will spin forward, but the back wheels will spin backward. The car will fight against itself and will not move properly!
+**The Problem:** If you solder the wires to the front motors and the back motors exactly the same way, the front wheels will spin forward, but the back wheels will spin backward. The car will fight against itself and will not move properly.
 
 **The Fix:** You must solder the wires on the back motors "backwards" compared to the front motors so all four wheels push in the exact same direction. 
 
